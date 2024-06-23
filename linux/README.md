@@ -15,23 +15,23 @@ sudo chattr +i /etc/resolv.conf # setting immutable
 ### Download few Basic packages
 
 ```bash
-sudo apt update
-sudo apt upgrade
-sudo apt install sl # just to test
-sudo apt install build-essential gdb # compilers
-sudo apt install cmake
-sudo apt install libreadline-dev unzip zip
-sudo apt install manpages-dev
-sudo apt install software-properties-common
-sudo apt update
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install sl -y # just to test
+sudo apt install build-essential gdb -y # compilers
+sudo apt install cmake -y
+sudo apt install libreadline-dev unzip zip -y
+sudo apt install manpages-dev -y
+sudo apt install software-properties-common -y
+sudo apt update -y
 ```
 
 ### zsh
 
 ```bash
-sudo apt install zsh
+sudo apt install zsh -y
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-sudo apt install fonts-powerline
+sudo apt install fonts-powerline -y
 ```
 
 Import the configs using the command below, add it to both `.bashrc` and `.zshrc`.
@@ -53,10 +53,10 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 ### Git
 
 ```bash
-sudo apt remove git
-sudo add-apt-repository ppa:git-core/ppa
-sudo apt update
-sudo apt install git
+sudo apt remove git -y
+sudo add-apt-repository ppa:git-core/ppa -y
+sudo apt update -y
+sudo apt install git -y
 
 # Authentication to Github should be done through gh CLI
 
@@ -65,13 +65,20 @@ git config --global core.autocrlf input
 git config --global core.safecrlf true
 # ^ We are setting the autocrlf to always to be '\n' instead of '\r\n'
 
-sudo apt install gh # Github CLI
+# Github CLI
+(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
 ```
 
 ### tmux
 
 ```bash
-sudo apt install tmux
+sudo apt install tmux -y
 ```
 
 Config :- `~/.tmux.conf`
@@ -92,34 +99,47 @@ set -g status-style bg=default
 ### Python
 
 ```bash
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-# You can replace python3.10 with other versions
-sudo apt install python3.10
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 2
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt update -y
+# You can replace python3.12 with other versions -y
+sudo apt install python3.12 -y
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 2
 sudo update-alternatives --config python3
-sudo apt install python3-dev python3-pip
-# Also install "python3.x-dev" like python3.10-dev
-sudo apt install python3-virtualenv
+sudo apt install python3-dev python3-pip -y
+# Also install "python3.x-dev" like python3.12-dev
+sudo apt install python3-virtualenv -y
 # Also install venv module with command below
-# sudo apt install python3.x-venv
-sudo apt install python3-tk # tkinter support
-sudo apt install python-is-python3
-# sudo apt remove python3-apt # this might cause problems
-sudo apt install python3-apt # apt manager python
+# sudo apt install python3.x-venv -y
+sudo apt install python3-tk -y # tkinter support
+sudo apt install python-is-python3 -y
+# sudo apt remove python3-apt -y # this might cause problems
+sudo apt install python3-apt -y # apt manager python
 
 # apt_pkg not found problem fix
 # cd /usr/lib/python3/dist-packages
 # sudo cp apt_pkg.cpython-310-x86_64-linux-gnu.so apt_pkg.so
 ```
 
+Fixing pip based error for python>=3.11
+
+```bash
+sudo mv /usr/lib/python3.12/EXTERNALLY-MANAGED /usr/lib/python3.12/EXTERNALLY-MANAGED.old
+```
+
+OR try this of you dont want to mess with those things, change `~/.config/pip/pip.conf`.
+
+```
+[global]
+break-system-packages = true
+```
+
 ### _**NeoVim**_
 
 ```bash
-# Install latest stable release of nvim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-sudo rm -rf /opt/nvim
-sudo tar -C /opt -xzf nvim-linux64.tar.gz
+sudo add-apt-repository ppa:neovim-ppa/stable -y
+sudo apt update
+sudo apt install neovim -y
+nvim -v
 
 # Installing Clipboard tool win32yank.exe
 curl -sLo/tmp/win32yank.zip https://github.com/equalsraf/win32yank/releases/download/v0.0.4/win32yank-x64.zip
@@ -128,7 +148,7 @@ chmod +x /tmp/win32yank.exe
 sudo mv /tmp/win32yank.exe /usr/local/bin/
 
 # Grep Tool
-sudo apt install ripgrep
+sudo apt install ripgrep -y
 
 # LazyGit tool
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
@@ -147,8 +167,8 @@ To use nvim of wsl properly in vscode
 ### Java and Kotlin
 
 ```bash
-sudo apt install default-jdk
-sudo apt install default-jre
+sudo apt install default-jdk -y
+sudo apt install default-jre -y
 update-alternatives --config java
 ```
 
@@ -208,12 +228,12 @@ sudo apt install perl
 ### 7zip
 
 ```bash
-sudo apt install p7zip-full p7zip-rar
+sudo apt install p7zip-full p7zip-rar -y
 ```
 
 ### Android Build Tools and ADB
 
 ```bash
-sudo apt install android-sdk-build-tools
-sudo apt install android-tools-adb
+sudo apt install android-sdk-build-tools -y
+sudo apt install android-tools-adb -y
 ```
