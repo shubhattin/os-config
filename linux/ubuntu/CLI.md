@@ -37,9 +37,9 @@ sudo apt install fonts-powerline -y
 Import the configs using the command below, add it to both `.bashrc` and `.zshrc`.
 
 ```bash
-source "$HOME/.config/os-config/linux/scripts/cli_config.sh"
+source "$HOME/.config/os-config/linux/ubuntu/scripts/cli_config.sh"
 # The file below is optional, this is the place where you could define your Environment Variabels
-source "$HOME/.config/os-config/linux/scripts/my_env.sh"
+source "$HOME/.config/os-config/linux/ubuntu/scripts/my_env.sh"
 ```
 
 ### NVM(Node Version Manager)

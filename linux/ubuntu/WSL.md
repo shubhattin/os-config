@@ -29,10 +29,9 @@ exit
 
 Install Latest LTS version or download from [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
-
 ### Shortcut for intended WSL Distro
 
-```bash
+```pwsh
 # List all installed wsl distros
 wsl -l
 # Then create a shortcut using
