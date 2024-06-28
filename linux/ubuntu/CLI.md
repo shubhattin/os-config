@@ -98,6 +98,9 @@ set -g status-style bg=default
 
 ### Python
 
+> ⚠️ **Unless very essentail try to stick with the default python version that was preinstalled, as python is a system dependency so changing the version and not properly being able to install all the packages previous version had might result in errors**
+
+
 ```bash
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt update -y
