@@ -39,7 +39,7 @@ Import the configs using the command below, add it to both `.bashrc` and `.zshrc
 ```bash
 source "$HOME/.config/os-config/linux/ubuntu/scripts/cli_config.sh"
 # The file below is optional, this is the place where you could define your Environment Variabels
-source "$HOME/.config/os-config/linux/ubuntu/scripts/my_env.sh"
+source "$HOME/.config/os-config/linux/my_env.sh"
 ```
 
 ### NVM(Node Version Manager)
@@ -49,6 +49,19 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 # Install the nvm version you prefer
 # like nvm install 20.9
 ```
+
+
+### Using Stow for dotfile management
+
+Install using `sudo apt install stow`
+
+Run command in the directory you have stored your dotfiles(the filestructure should correspond to $HOME directory).
+You need to run this command after each change made to the dotfiles.
+```bash
+stow .
+```
+
+Use `.stow-local-ignore` to ignore files. Example [dotfile repo]().
 
 ### Git
 
@@ -139,9 +152,18 @@ break-system-packages = true
 ### _**NeoVim**_
 
 ```bash
+# this ppa on ubuntu 22 does not has >=0.8 but on 24 it does seem to have
 sudo add-apt-repository ppa:neovim-ppa/stable -y
-sudo apt update
+# If the above ppa does not contain required version(maybe >= 0.8) then
+# you should try the second method below
+sudo apt update -y
 sudo apt install neovim -y
+nvim -v
+
+# second method
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+sudo rm -rf /opt/nvim
+sudo tar -C /opt -xzf nvim-linux64.tar.gz
 nvim -v
 
 # For Copy and Paste in nvim now using using native clip.exe and pwsh commands
