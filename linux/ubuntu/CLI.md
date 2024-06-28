@@ -61,7 +61,7 @@ You need to run this command after each change made to the dotfiles.
 stow .
 ```
 
-Use `.stow-local-ignore` to ignore files. Example [dotfile repo]().
+Use `.stow-local-ignore` to ignore files. Example [dotfile repo](https://github.com/shubhattin/dotfiles).
 
 ### Git
 
