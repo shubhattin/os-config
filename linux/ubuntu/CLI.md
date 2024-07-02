@@ -34,13 +34,24 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 sudo apt install fonts-powerline -y
 ```
 
-Import the configs using the command below, add it to both `.bashrc` and `.zshrc`.
+Import the configs using the command below, add it to both `.bashrc` or `.zshrc`.
 
 ```bash
-source "$HOME/.config/os-config/linux/ubuntu/scripts/cli_config.sh"
+source "$HOME/.config/os-config/linux/cli_config.sh"
 # The file below is optional, this is the place where you could define your Environment Variabels
 source "$HOME/.config/os-config/linux/my_env.sh"
 ```
+
+### Using zodide instead of cd
+
+Install [zodide](https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation).
+Add at end of .zshrc
+
+```bash
+eval "$(zoxide init --cmd cd zsh)"
+# --cmd cd -> replaces the cd command. if you dont add this you could use it using `z`
+```
+Refer [this video](https://www.youtube.com/watch?v=aghxkpyRVDY).
 
 ### NVM(Node Version Manager)
 
@@ -178,6 +189,12 @@ tar xf lazygit.tar.gz lazygit
 sudo install lazygit /usr/local/bin
 ```
 
+Installing Clipboard Providers on Linux (For WSL using powershell and native commands).
+If you are on an Xorg session, you may install either xsel or xclip by running:
+`sudo apt install xsel` or `sudo apt install xclip`
+If you are on a Wayland session, you may install wl-clipboard by running:
+`sudo apt install wl-clipboard`
+
 To use nvim of wsl properly in vscode
 
 ```json
@@ -276,6 +293,9 @@ sudo -u postgres psql
 
 # Set Password after login
 /password postgres
+
+# the above mighr have some problems running in older version so use this
+ALTER USER <usernamee> WITH PASSWORD '<passwoord>';
 ```
 
 ### Go
