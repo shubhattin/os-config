@@ -49,9 +49,16 @@ Add at end of .zshrc
 
 ```bash
 eval "$(zoxide init --cmd cd zsh)"
-# --cmd cd -> replaces the cd command. if you dont add this you could use it using `z`
+# --cmd cd -> replaces the cd command. if you dont add this you could use it using `z`, So new commands would be cd and cdi
 ```
 Refer [this video](https://www.youtube.com/watch?v=aghxkpyRVDY).
+Install a fuzzy finder to use in `cdi` command
+```bash
+sudo apt install fzf -y
+# use cdi as a fuzzy finder in zoxide db
+# also to launch interactive shell, start typing the path part press space followed by TAB
+# This should bring up a filtered interactive window
+```
 
 ### NVM(Node Version Manager)
 
@@ -311,3 +318,6 @@ sudo apt install golang-go -y
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
+
+> Refer [this video](https://www.youtube.com/watch?v=nCS4BtJ34-o).
+
