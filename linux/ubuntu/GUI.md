@@ -54,7 +54,10 @@
   - [x] XDM or a better alternative if you can find like IDM
     - [x] Some file type downloads are not being caught like mp4
       - :heavy_check_mark: for now staying with this limitation as noother good tool tried or found. It is not a problem as it is just a longer process and we have to manaually right click on the link or see if video was detected in extension panel.
-  - [x] YouTube Video Downloader :- [Parabolic](https://github.com/NickvisionApps/Parabolic)
+  - [x] YouTube Video Downloader
+    - [Parabolic](https://github.com/NickvisionApps/Parabolic)
+    - Video Downloader via `flatpak install flathub com.github.unrud.VideoDownloader`
+    - Tube2go via `flatpak install flathub com.warlordsoftwares.tube2go`
   - [x] A Speed Monitor tool like DU Meter
     - You can use the built in system monitor or Mission center app.
   - [x] Clipboard Manager : Use [Diodon](https://github.com/diodon-dev/diodon).
