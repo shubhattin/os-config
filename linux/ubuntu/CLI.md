@@ -1,4 +1,4 @@
-# WSL Ubuntu Config
+# CLI config
 
 ### Configuring DNS
 
