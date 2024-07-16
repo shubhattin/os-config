@@ -1,15 +1,16 @@
-> This file has not yet been updated for Fedora KDE
+> This file has not yet been fully updated for Fedora KDE
 
 ## OS Installation and Boot
-- [x] How to manually partition the concerned drive to install Mint as a dual boot :- This was easy you just need to shorten your drive from which you want to allocate space. Then set it to ext4 and mount point to /. And should be fine
-- [x] Figure out and fix the error which happens after when we delete the partition in which mint was installed and then merge it back into the original partition. The partition in which it was merged show _Used Space_ unknown thus making the installer not being able to make a partition :- for this you should resize you drive in windows to allocate free  space which you can use in linux installation.
-- [x] Find a way to access linux's ext4 from windows :- Using [Linux FileSystem for Windows by Paragon](https://www.paragon-software.com/home/linuxfs-windows/)
+- To install with windows as dual boot ensure these things
+  - Choose the `Advanced Custom Partion` Method while allocating disk for installtion.
+  - `/boot/efi` -> On fedora installation you need to manually set the mount point. Choose `EFI File System` as partition format.
+  - `/` -> `Reformat` and `ext4`. Do not install as LVM as it would interfere with dual boot. Also if you `btrfs` you would be limited to only `read`.
+  - `/home` -> `No Reformat` and `ext4`
+  - [ ] Swap/Zram
+- It would be recommended to free space prior to opening the setup and defrag disk if needed.
+- Use this [Linux FileSystem for Windows by Paragon](https://www.paragon-software.com/home/linuxfs-windows/) to access linux filesystem on windows.
+  - [ ] find if we can use this even when our `/home` or `/` are encrypted.
 
-#### Notes
-- You should allocate free space into unallocated before the installer setup, and also have it merged if required or prepartioned according to usage.
-- For `/` select unallocated space and `ext4` with mount point `\`.
-- If you want to have a sperate `/home` in a different partion then select `ext4`, :warning: only select format option if you want to format your preexisting /home directory.
-- You can also have a swap partition instead of a swap file of desired size
 
 ## Basic Setup
 - Connectivity
@@ -19,26 +20,30 @@
   - [x] USB tethering
   - [x] Mobile Devices
   - [x] Bluetooth Tethering
-- [x] **TouchPad Setup** : Touchpad support is overall fine, but while scrolling the scroll feedback is not instant. I found that is a mint particular problem and there might be fixes around it.
-  - :warning:  It seems like the support for zoom in/out at a particular spot seems not not be working at least in x11. There might be some workaround in wayland. 
-- [x] Time and Date Issue 
-  - `sudo apt install ntp -y` for network time provider's newer version.
-  - reconfigure `sudo dpkg-reconfigure tzdata`
-- [x] **Dual Monitor Support** : You need to _mirror_ screen and set the monitor's resolution while connected and laptop's resolution while disconnected, you might as well explore `x11` config for that. Click `Display Settings` on the home screen.
+- **TouchPad Setup**
+  - touchpad support is good in both `x11` and `wayland`. But you need to enbale `Invert Scroll Direction (Natural Scrolling)` for touchpad in `KDE Settings`
+  - To enable `Pinch Zoom In/Out` add flag `--enable-features=UseOzonePlatform --ozone-platform=wayland` in a wayland session. for eg :- for chrome and brave
+    - if you are not able to set flag with gui you should try editing `Exec` in `.desktop` file shortcut
+    - [ ] Also how to disable this on x11 as apps dont start
+- [x] Time and Date
+- [ ] **Dual Monitor Support** : You need to _mirror_ screen and set the monitor's resolution while connected and laptop's resolution while disconnected, you might as well explore `x11` config for that. Click `Display Settings` on the home screen.
   - Enable fractional scaling to enable ui zoom like 125%, 150% etc
   - > You might face problems with fractional scaling in mint as its experimental. To fix this you could temporarily or permanently switch to resolution close `dimension/scaling factor`, although this would come at cost of reduced sharpness and reduced screen quality(this also save some power).
-- [x] Setup `GPU` properly and optimize for **battery** usage
-  - :heavy_check_mark:  For now the intel integrated GPU seems to be working fine with mint.
-  - For Dual GPU goto `Driver Manager` and install a NVIDIA driver. And it should be fine. You can either use dedicated NVIDIA or on demand NVIDIA
-  - [x] Setup proper lid down, sleep button click, shutdown button click for with/without charger plugged in :- `Suspend` seems to be sleep alternative.
+- **GPU Setup**
+  - list GPUs `lspci -vnn | grep VGA`
+  - [ ] Explore more on Dual GPU support in fedora. Also find ways to use Dedicated GPU when needed
+  - To install Proprietary NVIDIA drivers follow [this](https://itsfoss.com/install-nvidia-drivers-fedora/)
   - [x] Use **[Mission Center](https://missioncenter.io/)**  or **[Resources](https://flathub.org/apps/net.nokyan.Resources)** to verify and see GPU Usage as it lists all major hardware resources. 
-- Dsable `Draw User Background from `Login Window` to set different login screen wallpaper.
 - _Power Management_ : If you feel that your system is not utilizing space in optimal way you could use [tlp](https://askubuntu.com/questions/1309396/how-to-increase-battery-life-on-ubuntu-20-04-and-what-power-saving-software-shou) and remove it see [here](https://www.baeldung.com/linux/tlp-disable)
+  - Setup Lid Close and other such options in `Power Management`
+- Add `Flathub` to fedora software repository as well using `flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`. [reference](https://flathub.org/setup/Fedora)
 - > :information_source: While using a usb drive or any any external storage device wait for the usb to eject and disappear from file explorer. Its because if something shows to be copied, deleted, moved etc, it still might be processing things in background. This also the reason why commands like `rm -rf and cp` feel faster than windows copy and delete.
+
 
 ## Software
 - [x] ***CLI Based Application*** : These apps usually work all fine without ever having any major issues.
-   - [x] Terminal Emulator :- Use tilix 
+   - [x] Terminal Emulator
+     - `Konsole` : Built in KDE terminal. Also enable proper `brahmic` script rendering in `Appearence > Complex Text Layout`
 - Browsers
   - [x] Brave
   - [x] Edge
@@ -46,8 +51,8 @@
 - Video Player
   - [x] VLC Media Player
      - :heavy_check_mark: for now vlc seems to be fine and could not find a good alternative for advanced player like powerdvd
-     - if facing problems with vlc flatpack install using [ppa](https://ubuntuhandbook.org/index.php/2023/07/new-ppa-vlc-ubuntu/)
-- Partition Manager : `GParted` via `sudo apt-get install gparted`
+- Partition Manager : Built in KDE Partition Manager
+  - [Disk Usage Analyser](https://flathub.org/apps/org.gnome.baobab)
 - Video Converter
   - [x] Alternative(s) to Wondershare i converter
     - [HandBrake](https://handbrake.fr/)
@@ -62,19 +67,23 @@
     - Tube2go via `flatpak install flathub com.warlordsoftwares.tube2go`
   - [x] A Speed Monitor tool like DU Meter
     - You can use the built in system monitor or Mission center app.
-  - [x] Clipboard Manager : Use [Diodon](https://github.com/diodon-dev/diodon).
-     - Go to Preferernces and enable
+  - [x] Clipboard Manager : 
+     - Use the existing KDE Clipboard maanger as it just serves the purpose
+       - The Shortcut `Win+V` already seems to be there for this
+     - Use [Diodon](https://github.com/diodon-dev/diodon). Go to Preferernces and enable
         - Use Clipboard
         - Add Images to Clipbaord
         - Keep Clipbaord Content
         - Synchronize clipboard
         - Automatically paste selected items
-      - Register a Shortcut with `Win+v` (like windows) with `/usr/bin/diodon`
-  - [x] Screenshot
-    - goto `Keyboard>Shortcuts` search for `Take a Screenshot` and change the shortcut to `Super+PtrScr`(.ie Wind+PtrScr)
+        - Register a Shortcut with `Win+V` (like windows) with `/usr/bin/diodon`
+  - [x] Screenshot : Use `Spectacle`
+    - Shortcut `Win+PtrSsc` is already configured for screenshot. You could also disable `Print` Button Action
   - [x] Eye Protector Apps
-    - [Safeeyes](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#ubuntu-linux-mint-and-other-ubuntu-derivatives) for 20-20 rule
+    - [ ] [Safeeyes](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#ubuntu-linux-mint-and-other-ubuntu-derivatives) for 20-20 rule
+      - you may prefer local package on [fedora](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#fedora)
     - [Iris micro gui](https://github.com/shubhattin/iris_micro_gui) for a app like careueyes
+      - > :warning: does not work in a wayland session as of now
   - [x] File Recovery App
     - [free Linux recovery](https://www.r-studio.com/free-linux-recovery/)  
     - Bootable [Redo](http://redorescue.com/)
@@ -127,7 +136,7 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 
 ## Shortcuts, Notes
 - Shortcuts
-  - [x] Lock Screen : `alt+ctrl+l` to lock screen
+  - [x] Lock Screen : `Win+L` to lock screen
   - [x] Copy/Paste in Terminal : `shift+ctrl+c/v`
   - [x] Registering shortcuts to open apps directly and finding a alternative to `alt+f4` of windows. in `Keyboard > Shortcut`
 - Font

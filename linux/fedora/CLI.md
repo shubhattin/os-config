@@ -103,7 +103,6 @@ sudo dnf install tmux -y
 ```
 
 ### Python
- -y
 > ⚠️ **Unless very essentail try to stick with the default python version that was preinstalled, as python is a system dependency so changing the version and not properly being able to install all the packages previous version had might result in errors**
 
 
@@ -175,8 +174,6 @@ sudo dnf install postgresql-server postgresql-contrib -y
 # enable psql start on startup
 sudo systemctl enable postgresql
 sudo systemctl start postgresql
-
-# init setup
 ```
 
 Other useful info
@@ -192,7 +189,7 @@ sudo -u postgres psql
 ALTER USER <usernamee> WITH PASSWORD '<passwoord>';
 ```
 
-For more [refer here)(https://docs.fedoraproject.org/en-US/quick-docs/postgresql/)
+For more [refer here](https://docs.fedoraproject.org/en-US/quick-docs/postgresql/)
 
 ### Go
 
