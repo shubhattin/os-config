@@ -1,12 +1,12 @@
-> This file has not yet been fully updated for Fedora KDE
-
 ## OS Installation and Boot
 - To install with windows as dual boot ensure these things
   - Choose the `Advanced Custom Partion` Method while allocating disk for installtion.
   - `/boot/efi` -> On fedora installation you need to manually set the mount point. Choose `EFI File System` as partition format.
   - `/` -> `Reformat` and `ext4`. Do not install as LVM as it would interfere with dual boot. Also if you `btrfs` you would be limited to only `read`.
   - `/home` -> `No Reformat` and `ext4`
-  - [ ] Swap/Zram
+  - _zram & swap_ : zram of 8GiB is already setup in fedora is setup so would not need to have a swap partition. But if requirement arises you can always create and use one.
+    - `cat /proc/swaps` to view current used swap devices including zram
+    - `zramctl` to view zram info
 - It would be recommended to free space prior to opening the setup and defrag disk if needed.
 - Use this [Linux FileSystem for Windows by Paragon](https://www.paragon-software.com/home/linuxfs-windows/) to access linux filesystem on windows.
   - [ ] find if we can use this even when our `/home` or `/` are encrypted.
@@ -41,20 +41,20 @@
 
 Touchpad support is good in both `x11` and `wayland`. But you need to enbale `Invert Scroll Direction (Natural Scrolling)` for touchpad in `KDE Settings`
 To enable `Pinch Zoom In/Out` add flag `--enable-features=UseOzonePlatform --ozone-platform=wayland` in a wayland session. for eg :- for chrome and brave
-But this cause problems if you are in a x11 session. So rather prefix the app command with `run_ozone_wayland_flags` after defining it in your shell profile.
+But this cause problems if you are in a x11 session. So rather prefix the app command with `run_ozone_wayland_flags`.
+We could also declare this as a function in profile but to on safer side rather declare it as execuatble in `/bin` (as the shell session variables might not be accessible)
 
-[ ]
+Save the file below as `/bin/run_ozone_wayland_flags`. also set executable permission by `sudo chmod +x /bin/run_ozone_wayland_flags`
 ```bash
-run_with_wayland_flags() {
-    if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-        "$@" --enable-features=UseOzonePlatform --ozone-platform=wayland
-    else
-        "$@"
-    fi
-}
+#!/usr/bin/bash
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    exec "$@" --enable-features=UseOzonePlatform --ozone-platform=wayland
+else
+    exec "$@"
+fi
 ```
 
-If you are not able to set flag with gui you should try editing `Exec` in `.desktop` file shortcut
+Now prefix the command for opening that app in cli or in .desktop file. like `/bin/run_ozone_wayland_flags /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=brave --file-forwarding com.brave.Browser @@u %U @@`
 
 ## Software
 - [x] ***CLI Based Application*** : These apps usually work all fine without ever having any major issues.
@@ -73,11 +73,12 @@ If you are not able to set flag with gui you should try editing `Exec` in `.desk
 - Video Converter
   - [x] Alternative(s) to Wondershare i converter
     - [HandBrake](https://handbrake.fr/)
-    - [ ] [Shutter Encoder](https://www.shutterencoder.com/)
+    - [x] [Shutter Encoder](https://www.shutterencoder.com/) : Available only via appimage on fedora
 - Others
-  - [ ] XDM or a better alternative if you can find like IDM
+  - [x] XDM or a better alternative if you can find like IDM
     - [x] Some file type downloads are not being caught like mp4
       - :heavy_check_mark: for now staying with this limitation as noother good tool tried or found. It is not a problem as it is just a longer process and we have to manaually right click on the link or see if video was detected in extension panel.
+    - :warning: :warning: There seems to problem on using it in a wayland session
   - [x] YouTube Video Downloader
     - [Parabolic](https://github.com/NickvisionApps/Parabolic)
     - Video Downloader via `flatpak install flathub com.github.unrud.VideoDownloader`
@@ -97,7 +98,7 @@ If you are not able to set flag with gui you should try editing `Exec` in `.desk
   - [x] Screenshot : Use `Spectacle`
     - Shortcut `Win+PtrSsc` is already configured for screenshot. You could also disable `Print` Button Action
   - Eye Protector Apps
-    - [Safeeyes](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#ubuntu-linux-mint-and-other-ubuntu-derivatives) for 20-20 rule
+    - Safeeyes for 20-20 rule from flathub
       - you may prefer local package on [fedora](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#fedora)
     - [Iris micro gui](https://github.com/shubhattin/iris_micro_gui) for a app like careueyes
       - > :warning: does not work in a wayland session as of now
@@ -113,17 +114,18 @@ If you are not able to set flag with gui you should try editing `Exec` in `.desk
     - Libre Office Draw
   - [x] Compression tools
     - [Peazip](https://peazip.github.io/peazip-linux.html)
-  - [ ] An IME to type Indian languages
+  - [x] An IME to type Indian languages
     - **Keyboard Layout Method** (Simple and no IME)
-       - Goto `Keyboard > Layouts` and then add the language or layout you need, for eg: Hindi -> Hindi(Wx)
-       - Under `Display Options` unheck 'show country flag' and check 'show layout name instead of group name'
+       - Goto `Keyboard > Layouts` and then add the language or layout you need, for eg: Hindi -> Hindi(Wx) and set a display text.
+       - Default shortcut to change keyboard layout is `Meta+Alt+K`
      - **Input Method Editor**
        - The above keyboard layout method can also be used in this approach as it has both keyboard layout and IME's
-       - Search `Input Method` and choose a indian language displayed there(in my case was telugu) and click install. This should install `ibus` and related dependencies. or install using `sudo apt install ibus ibus-m17n m17n-db fonts-indic fcitx-m17n ibus-clutter ibus-table ` 
-       - After installed logout and open method again and select input framework to be ibus.
+       - On wayland session open Keyboard > Virtual Keyboard and set select IBus Wayland and apply.
+       - Search for Input Method Selector and set preferences of ibus.
        - Open Ibus Preferences, select input method and now you should be able to add both layouts and IMEs.
        - Restart the computer to ensure proper functioning
-     - Use `Win+Space` to switch and change shall be reflected in taskbar
+       - Default Shortcut to change layout is `Super+space` you could change it to `Super+Alt+space` from preferences
+       - :warning: does not works on few apps on a wayland session
      - > Keyboard Layout Access Scheme :- **Left Bottom  : `no shift` | Left Top : `Shift` || Right Bottom : `RightAlt` | Right Top : `RightAlt+Shift`**
      - You can see keyboard layout either directly from taskbar if available(like for Hindi Wx) or goto `ibus Preferences > Input method > Select the Layout > About` 
      - _Recommendation : Use the first Approach described unless necessary_
@@ -132,13 +134,12 @@ If you are not able to set flag with gui you should try editing `Exec` in `.desk
    - [Simple Screen Recorder](https://github.com/MaartenBaert/ssr)
    - [OBS Studio](https://obsproject.com/) for advanced purposes
    - [Kazam](https://github.com/henrywoo/kazam)
-> To Create keyboard shortcuts goto `Keyboard > Shortcuts > Custom Shortcuts`
+> To Create keyboard shortcuts goto `Keyboard > Shortcuts`
 
 ### VS Code Keybindings Fix
 
 Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf) and [Linux](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-linux.pdf) keybindings guide to see if the shortcut you is event present on you or platform.
 
-- `Alt+click` issue in Linux mint, [here](https://forums.linuxmint.com/viewtopic.php?t=403820). This is because `Alt` is used for window management so disable it.
 - Others shortcuts problem [here](https://stackoverflow.com/questions/73469919/vsc-the-copy-line-down-doesnt-work-and-when-i-trie-to-edit-the-key-combination)
 - If a shortcut listed for your platform does not work then the DE might be interfering with it.
 - If a shortcut is not present for your platform try adding yourself.
@@ -156,10 +157,14 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 - Shortcuts
   - [x] Lock Screen : `Win+L` to lock screen
   - [x] Copy/Paste in Terminal : `shift+ctrl+c/v`
+  - [x] `Meta+PgUp/Down` to Maximize/Minimize page. To also support numpad pgup/pgdown edit `Kwin` shortcuts
   - [x] Registering shortcuts to open apps directly and finding a alternative to `alt+f4` of windows. in `Keyboard > Shortcut`
 - Font
   - to install fonts locally copy it to `~/.local/share/fonts` folder. then `sudo fc-cache -f -v`
   - restart the computer to use the fonts properly in the terminal
+- Disable Calendar from AutoStart (as it takes considerable memory we dont need it now)
+  - `cp /etc/xdg/autostart/org.kde.kalendarac.desktop ~/.config/autostart` to have the config accessible in `AutoStart`
+  - Then Open AutoStart and disable it.
 
 ## Backup Instructions for `/home` directory
 
