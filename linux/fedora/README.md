@@ -1,4 +1,4 @@
-## Config for Fedora
+## Config/Setup Guide for Fedora
 
-- **[Command Line Tools Setup](./CLI.md)**
-- **[Graphical Interface](./GUI.md)**
+- **[Command Line Tools](./CLI.md)**
+- **[Desktop Environment](./DE.md)**

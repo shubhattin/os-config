@@ -20,11 +20,6 @@
   - [x] USB tethering
   - [x] Mobile Devices
   - [x] Bluetooth Tethering
-- **TouchPad Setup**
-  - touchpad support is good in both `x11` and `wayland`. But you need to enbale `Invert Scroll Direction (Natural Scrolling)` for touchpad in `KDE Settings`
-  - To enable `Pinch Zoom In/Out` add flag `--enable-features=UseOzonePlatform --ozone-platform=wayland` in a wayland session. for eg :- for chrome and brave
-    - if you are not able to set flag with gui you should try editing `Exec` in `.desktop` file shortcut
-    - [ ] Also how to disable this on x11 as apps dont start
 - [x] Time and Date
 - [ ] **Dual Monitor Support** : You need to _mirror_ screen and set the monitor's resolution while connected and laptop's resolution while disconnected, you might as well explore `x11` config for that. Click `Display Settings` on the home screen.
   - Enable fractional scaling to enable ui zoom like 125%, 150% etc
@@ -34,16 +29,38 @@
   - [ ] Explore more on Dual GPU support in fedora. Also find ways to use Dedicated GPU when needed
   - To install Proprietary NVIDIA drivers follow [this](https://itsfoss.com/install-nvidia-drivers-fedora/)
   - [x] Use **[Mission Center](https://missioncenter.io/)**  or **[Resources](https://flathub.org/apps/net.nokyan.Resources)** to verify and see GPU Usage as it lists all major hardware resources. 
+- **X11** : `x11` Session disabled by default on fedora so has to be manually added
+  - `sudo dnf install -y plasma-workspace-x11 kwin-x11` for x11 dependencies for fedora. Then restart and switch to X11 on login screen (bottom left)
+  - You might need to configure your mouse/touchpad on your initial login
 - _Power Management_ : If you feel that your system is not utilizing space in optimal way you could use [tlp](https://askubuntu.com/questions/1309396/how-to-increase-battery-life-on-ubuntu-20-04-and-what-power-saving-software-shou) and remove it see [here](https://www.baeldung.com/linux/tlp-disable)
   - Setup Lid Close and other such options in `Power Management`
 - Add `Flathub` to fedora software repository as well using `flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`. [reference](https://flathub.org/setup/Fedora)
 - > :information_source: While using a usb drive or any any external storage device wait for the usb to eject and disappear from file explorer. Its because if something shows to be copied, deleted, moved etc, it still might be processing things in background. This also the reason why commands like `rm -rf and cp` feel faster than windows copy and delete.
 
+#### **TouchPad Setup**
+
+Touchpad support is good in both `x11` and `wayland`. But you need to enbale `Invert Scroll Direction (Natural Scrolling)` for touchpad in `KDE Settings`
+To enable `Pinch Zoom In/Out` add flag `--enable-features=UseOzonePlatform --ozone-platform=wayland` in a wayland session. for eg :- for chrome and brave
+But this cause problems if you are in a x11 session. So rather prefix the app command with `run_ozone_wayland_flags` after defining it in your shell profile.
+
+[ ]
+```bash
+run_with_wayland_flags() {
+    if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+        "$@" --enable-features=UseOzonePlatform --ozone-platform=wayland
+    else
+        "$@"
+    fi
+}
+```
+
+If you are not able to set flag with gui you should try editing `Exec` in `.desktop` file shortcut
 
 ## Software
 - [x] ***CLI Based Application*** : These apps usually work all fine without ever having any major issues.
    - [x] Terminal Emulator
      - `Konsole` : Built in KDE terminal. Also enable proper `brahmic` script rendering in `Appearence > Complex Text Layout`
+     - Or you could use Tilix
 - Browsers
   - [x] Brave
   - [x] Edge
@@ -56,9 +73,9 @@
 - Video Converter
   - [x] Alternative(s) to Wondershare i converter
     - [HandBrake](https://handbrake.fr/)
-    - [Shutter Encoder](https://www.shutterencoder.com/)
+    - [ ] [Shutter Encoder](https://www.shutterencoder.com/)
 - Others
-  - [x] XDM or a better alternative if you can find like IDM
+  - [ ] XDM or a better alternative if you can find like IDM
     - [x] Some file type downloads are not being caught like mp4
       - :heavy_check_mark: for now staying with this limitation as noother good tool tried or found. It is not a problem as it is just a longer process and we have to manaually right click on the link or see if video was detected in extension panel.
   - [x] YouTube Video Downloader
@@ -79,8 +96,8 @@
         - Register a Shortcut with `Win+V` (like windows) with `/usr/bin/diodon`
   - [x] Screenshot : Use `Spectacle`
     - Shortcut `Win+PtrSsc` is already configured for screenshot. You could also disable `Print` Button Action
-  - [x] Eye Protector Apps
-    - [ ] [Safeeyes](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#ubuntu-linux-mint-and-other-ubuntu-derivatives) for 20-20 rule
+  - Eye Protector Apps
+    - [Safeeyes](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#ubuntu-linux-mint-and-other-ubuntu-derivatives) for 20-20 rule
       - you may prefer local package on [fedora](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#fedora)
     - [Iris micro gui](https://github.com/shubhattin/iris_micro_gui) for a app like careueyes
       - > :warning: does not work in a wayland session as of now
@@ -88,7 +105,7 @@
     - [free Linux recovery](https://www.r-studio.com/free-linux-recovery/)  
     - Bootable [Redo](http://redorescue.com/)
   - [x] Rufus Alternatives
-    - Use [Ventoy](https://ventoy.net/en/download.html) for windows and linux as well. [Windows Guide](https://www.reddit.com/r/linux4noobs/comments/z5dk4o/how_can_i_burn_a_bootable_win10_usb_in_linux/)
+    - Use **[Ventoy](https://ventoy.net/en/download.html) for windows and linux as well. [Windows Guide](https://www.reddit.com/r/linux4noobs/comments/z5dk4o/how_can_i_burn_a_bootable_win10_usb_in_linux/)**
     - [Universal USB Instaler](https://pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/#how-to-install-universal-usb-installer-in-linux)
     - [Posicle](https://flathub.org/apps/com.system76.Popsicle)
     - > :information_source: If the default file explorer formatter gives problems goto `Disks`
@@ -96,7 +113,7 @@
     - Libre Office Draw
   - [x] Compression tools
     - [Peazip](https://peazip.github.io/peazip-linux.html)
-  - [x] An IME to type Indian languages
+  - [ ] An IME to type Indian languages
     - **Keyboard Layout Method** (Simple and no IME)
        - Goto `Keyboard > Layouts` and then add the language or layout you need, for eg: Hindi -> Hindi(Wx)
        - Under `Display Options` unheck 'show country flag' and check 'show layout name instead of group name'
@@ -110,7 +127,8 @@
      - > Keyboard Layout Access Scheme :- **Left Bottom  : `no shift` | Left Top : `Shift` || Right Bottom : `RightAlt` | Right Top : `RightAlt+Shift`**
      - You can see keyboard layout either directly from taskbar if available(like for Hindi Wx) or goto `ibus Preferences > Input method > Select the Layout > About` 
      - _Recommendation : Use the first Approach described unless necessary_
-- [x] Screen Recorder
+- Screen Recorder
+   - KDE's Built in Screen Recorder
    - [Simple Screen Recorder](https://github.com/MaartenBaert/ssr)
    - [OBS Studio](https://obsproject.com/) for advanced purposes
    - [Kazam](https://github.com/henrywoo/kazam)
