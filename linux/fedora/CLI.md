@@ -24,13 +24,14 @@ sudo dnf install readline-devel unzip zip -y
 sudo dnf install man-pages -y
 sudo dnf install dnf-plugins-core -y
 sudo dnf install p7zip -y
+sudo dnf install wget curl -y
 ```
 
 ### zsh
 
 ```bash
 sudo dnf upgrade --refresh
-sudo dnf install zsh wger curl -y
+sudo dnf install zsh -y
 # changinf default shell to zsh
 chsh -s $(which zsh)
 

@@ -21,6 +21,7 @@
   - [x] Mobile Devices
   - [x] Bluetooth Tethering
 - [x] Time and Date
+- [TouchPad Zoom In/Out Gestures](./touchpad/touchpad.md)
 - [ ] **Dual Monitor Support** : You need to _mirror_ screen and set the monitor's resolution while connected and laptop's resolution while disconnected, you might as well explore `x11` config for that. Click `Display Settings` on the home screen.
   - Enable fractional scaling to enable ui zoom like 125%, 150% etc
   - > You might face problems with fractional scaling in mint as its experimental. To fix this you could temporarily or permanently switch to resolution close `dimension/scaling factor`, although this would come at cost of reduced sharpness and reduced screen quality(this also save some power).
@@ -37,30 +38,12 @@
 - Add `Flathub` to fedora software repository as well using `flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`. [reference](https://flathub.org/setup/Fedora)
 - > :information_source: While using a usb drive or any any external storage device wait for the usb to eject and disappear from file explorer. Its because if something shows to be copied, deleted, moved etc, it still might be processing things in background. This also the reason why commands like `rm -rf and cp` feel faster than windows copy and delete.
 
-#### **TouchPad Setup**
-
-Touchpad support is good in both `x11` and `wayland`. But you need to enbale `Invert Scroll Direction (Natural Scrolling)` for touchpad in `KDE Settings`
-To enable `Pinch Zoom In/Out` add flag `--enable-features=UseOzonePlatform --ozone-platform=wayland` in a wayland session. for eg :- for chrome and brave
-But this cause problems if you are in a x11 session. So rather prefix the app command with `run_ozone_wayland_flags`.
-We could also declare this as a function in profile but to on safer side rather declare it as execuatble in `/bin` (as the shell session variables might not be accessible)
-
-Save the file below as `/bin/run_ozone_wayland_flags`. also set executable permission by `sudo chmod +x /bin/run_ozone_wayland_flags`
-```bash
-#!/usr/bin/bash
-if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-    exec "$@" --enable-features=UseOzonePlatform --ozone-platform=wayland
-else
-    exec "$@"
-fi
-```
-
-Now prefix the command for opening that app in cli or in .desktop file. like `/bin/run_ozone_wayland_flags /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=brave --file-forwarding com.brave.Browser @@u %U @@`
-
 ## Software
 - [x] ***CLI Based Application*** : These apps usually work all fine without ever having any major issues.
    - [x] Terminal Emulator
      - `Konsole` : Built in KDE terminal. Also enable proper `brahmic` script rendering in `Appearence > Complex Text Layout`
      - Or you could use Tilix
+- > _Not using flatpaks or snaps for some cases might be a better option if a good up to date version is avilable in system repository. It is suitable for browesers, electron apps, video players, system monitor tools. And may be avoided for some utitlities, creative software for multimedia_
 - Browsers
   - [x] Brave
   - [x] Edge
@@ -98,8 +81,8 @@ Now prefix the command for opening that app in cli or in .desktop file. like `/b
   - [x] Screenshot : Use `Spectacle`
     - Shortcut `Win+PtrSsc` is already configured for screenshot. You could also disable `Print` Button Action
   - Eye Protector Apps
-    - Safeeyes for 20-20 rule from flathub
-      - you may prefer local package on [fedora](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#fedora)
+    - [Safeeyes](https://github.com/slgobinath/SafeEyes?tab=readme-ov-file#fedora) for 20-20 rule from flathub
+      - You should prefer system package installation over flatpak in this case
     - [Iris micro gui](https://github.com/shubhattin/iris_micro_gui) for a app like careueyes
       - > :warning: does not work in a wayland session as of now
   - [x] File Recovery App
@@ -112,6 +95,7 @@ Now prefix the command for opening that app in cli or in .desktop file. like `/b
     - > :information_source: If the default file explorer formatter gives problems goto `Disks`
   - [x] Pdf Editor
     - Libre Office Draw
+    - [Pdf Rearranger](https://flathub.org/apps/com.github.jeromerobert.pdfarranger) for arranging spplitting and mergeing pdf
   - [x] Compression tools
     - [Peazip](https://peazip.github.io/peazip-linux.html)
   - [x] An IME to type Indian languages

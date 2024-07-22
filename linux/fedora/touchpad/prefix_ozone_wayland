@@ -1,0 +1,51 @@
+#!/bin/env python3
+
+from rich import print
+
+# Making this script only executable in root
+# sudo pip3 install rich  # for displaying coloured output
+# sudo chown root:root /bin/prefix_ozone_wayland
+# sudo chmod 754 /bin/prefix_ozone_wayland
+
+
+def parse_file(file_path):
+    file_names = []
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line in file:
+            # Remove any comment and strip whitespace
+            stripped_line = line.split("#", 1)[0].strip()
+            # Ignore empty lines
+            if stripped_line:
+                file_names.append(stripped_line)
+    return file_names
+
+
+def main():
+    FILES = parse_file("/root/.plasma_wayland_prefixer.conf")
+    OZONE_WAYLAND_PATH = "/usr/bin/run_ozone_wayland_flags"
+    for file in FILES:
+        lines = []
+        with open(file, "r", encoding="utf-8") as fl:
+            lines = fl.readlines()
+        new_lines = []
+        change_count = 0
+        for line in lines:
+            new_line = line
+            if line.startswith("Exec=") and not line.startswith(
+                f"Exec={OZONE_WAYLAND_PATH}"
+            ):
+                new_line = f"{line[:5]}{OZONE_WAYLAND_PATH} {line[5:]}"
+                change_count += 1
+            new_lines.append(new_line)
+        if change_count > 0:
+            print(f"Changes : [bold]{change_count}[/] -> '{file}'")
+            with open(file, "w", encoding="utf-8") as fl:
+                fl.writelines(new_lines)
+                print(f"[green bold]Written : {file}[/]")
+        else:
+            print("[yellow]No files found to be changed[/]")
+
+
+if __name__ == "__main__":
+    main()
+
