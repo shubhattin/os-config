@@ -27,7 +27,9 @@ sudo dnf install p7zip -y
 sudo dnf install wget curl -y
 ```
 
-### zsh
+### Shell Setup
+
+#### zsh
 
 ```bash
 sudo dnf upgrade --refresh
@@ -39,7 +41,7 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 sudo dnf install powerline-fonts -y
 ```
 
-### Using zodide instead of cd
+#### Using zodide instead of cd
 
 Install [zodide](https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation) or by `sudo dnf install zoxide -y`.
 Add at end of .zshrc
@@ -56,6 +58,18 @@ sudo dnf install fzf -y
 # also to launch interactive shell, start typing the path part press space followed by TAB
 # This should bring up a filtered interactive window
 ```
+
+#### atuin for better history
+
+```bash
+# installation
+curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+```
+
+Add `eval "$(atuin init zsh)"` at the end of `~/.zshrc`
+
+To delete command history use `atuin search --delete-it-all`
+To delete specific entries(prefixes) `atuin search --delete --search-mode prefix psql`
 
 ### NVM(Node Version Manager)
 
@@ -204,3 +218,10 @@ sudo dnf install -y golang
 sudo dnf install -y rust cargo
 ```
 
+### Speedtest CLI
+
+```bash
+URL="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz"
+cd /tmp && UUID=$(uuidgen) && mkdir "$UUID" && cd "$UUID" && wget "$URL" -O speedtest.tgz && tar -xzf speedtest.tgz
+LOCAL_BIN="$HOME/.local/bin" && mkdir -p "$LOCAL_BIN" && mv speedtest "$LOCAL_BIN/speedtest" && cd
+```

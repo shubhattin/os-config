@@ -22,6 +22,7 @@
   - [x] Bluetooth Tethering
 - [x] Time and Date
 - [TouchPad Zoom In/Out Gestures](./touchpad/touchpad.md)
+- If touchpad settings dont show up in KDE settingss use `kcmshell6 kcm_touchpad`
 - [ ] **Dual Monitor Support** : You need to _mirror_ screen and set the monitor's resolution while connected and laptop's resolution while disconnected, you might as well explore `x11` config for that. Click `Display Settings` on the home screen.
   - Enable fractional scaling to enable ui zoom like 125%, 150% etc
   - > You might face problems with fractional scaling in mint as its experimental. To fix this you could temporarily or permanently switch to resolution close `dimension/scaling factor`, although this would come at cost of reduced sharpness and reduced screen quality(this also save some power).
@@ -44,6 +45,7 @@
      - `Konsole` : Built in KDE terminal. Also enable proper `brahmic` script rendering in `Appearence > Complex Text Layout`
      - Or you could use Tilix
 - > _Not using flatpaks or snaps for some cases might be a better option if a good up to date version is avilable in system repository. It is suitable for browesers, electron apps, video players, system monitor tools. And may be avoided for some utitlities, creative software for multimedia_
+- Install **[Flatseal](https://flathub.org/apps/com.github.tchx84.Flatseal)** to manage flatpak file permissions.
 - Browsers
   - [x] Brave
   - [x] Edge
@@ -90,7 +92,6 @@
     - Bootable [Redo](http://redorescue.com/)
   - [x] Rufus Alternatives
     - Use **[Ventoy](https://ventoy.net/en/download.html) for windows and linux as well. [Windows Guide](https://www.reddit.com/r/linux4noobs/comments/z5dk4o/how_can_i_burn_a_bootable_win10_usb_in_linux/)**
-    - [Universal USB Instaler](https://pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/#how-to-install-universal-usb-installer-in-linux)
     - [Posicle](https://flathub.org/apps/com.system76.Popsicle)
     - > :information_source: If the default file explorer formatter gives problems goto `Disks`
   - [x] Pdf Editor

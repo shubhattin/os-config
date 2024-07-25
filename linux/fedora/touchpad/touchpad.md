@@ -8,8 +8,6 @@ We could also declare this as a function in profile but to on safer side rather 
 
 Save the [file](./run_ozone_wayland_flags) below as `/bin/run_ozone_wayland_flags`. also set executable permission by `sudo chmod +x` or `sudo chmod 755`. 
 
-Now prefix the command for opening that app in cli or in .desktop file. like `/bin/run_ozone_wayland_flags /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=brave --file-forwarding com.brave.Browser @@u %U @@`
-
 > :warning: **_You might experience that even after changing the `Exec` field it still not works. Then the ways left are either to register the shortcuts directly through commands rather than application launch shortcut. Or it has also been noticed that whenever fedora restarted after a ctricital system update it updated the Exec field as well._**
 
 ### Solving `Exec` Being Reset after update from Flathub
@@ -35,4 +33,15 @@ Then verify by running
 
 ```bash
 sudo systemctl enable prefix_ozone_wayland.service
+```
+
+### Save config file in `/root/.plasma_wayland_prefixer.conf`
+
+Example config file. My [config file](https://github.com/shubhattin/dotfiles/blob/main/others/.plasma_wayland_prefixer.conf)
+
+```config
+# Brave
+/var/lib/flatpak/app/com.brave.Browser/current/active/export/share/applications/com.brave.Browser.desktop
+# Edge
+/var/lib/flatpak/app/com.microsoft.Edge/current/active/export/share/applications/com.microsoft.Edge.desktop
 ```
