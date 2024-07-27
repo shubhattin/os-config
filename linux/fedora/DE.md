@@ -36,16 +36,38 @@
   - > You might face problems with fractional scaling in mint as its experimental. To fix this you could temporarily or permanently switch to resolution close `dimension/scaling factor`, although this would come at cost of reduced sharpness and reduced screen quality(this also save some power).
 - **GPU Setup**
   - list GPUs `lspci -vnn | grep VGA`
+  - Follow Instruction [here](https://www.tecmint.com/install-nvidia-drivers-in-linux/) to install nvidia drivers. Also read [this](https://docs.fedoraproject.org/en-US/quick-docs/set-nvidia-as-primary-gpu-on-optimus-based-laptops/) if you wish to setup nvidia as primary gpu in fedora.
+    - Check if `nouveau` or the proprietary nvidia drivers are running
+      - `lsmod | grep nouveau`
+      - `lsmod | grep nvidia`
+      - `lspci -k | grep -A 3 -i "VGA"` to view installed drivers in use
+  - Check nvidia kernel module version `modinfo -F version nvidia`
   - [ ] Explore more on Dual GPU support in fedora. Also find ways to use Dedicated GPU when needed
-  - To install Proprietary NVIDIA drivers follow [this](https://itsfoss.com/install-nvidia-drivers-fedora/)
+    - [ ] [Setting Nvidia Optimus](https://rpmfusion.org/Howto/Optimus) for dediacted gpu support 
+  - [ ] Try to run tensorflow with nvidia gpu in both dual gpu and single gpu devices
   - [x] Use **[Mission Center](https://missioncenter.io/)** or **[Resources](https://flathub.org/apps/net.nokyan.Resources)** to verify and see GPU Usage as it lists all major hardware resources.
+  - **Testing GPU** : Install glmark2 `sudo dnf install glmark2`
+    - Testing default/primary gpu : `glmark2`
+    - Testing Nvidia GPU specifically : `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glmark2`
+    - While test is in progress watch the gpu usage in Mission Center. At the end it should give you a score for the benchmark.
 - **X11** : `x11` Session disabled by default on fedora so has to be manually added
   - `sudo dnf install -y plasma-workspace-x11 kwin-x11` for x11 dependencies for fedora. Then restart and switch to X11 on login screen (bottom left)
   - You might need to configure your mouse/touchpad on your initial login
 - _Power Management_ : If you feel that your system is not utilizing space in optimal way you could use [tlp](https://askubuntu.com/questions/1309396/how-to-increase-battery-life-on-ubuntu-20-04-and-what-power-saving-software-shou) and remove it see [here](https://www.baeldung.com/linux/tlp-disable)
   - Setup Lid Close and other such options in `Power Management`
-- Add `Flathub` to fedora software repository as well using `flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`. [reference](https://flathub.org/setup/Fedora)
+  - _Sleep function might malfunctioning, insttalling gpu drivers fixed laptop overheating in my case_,
 - > :information_source: While using a usb drive or any any external storage device wait for the usb to eject and disappear from file explorer. Its because if something shows to be copied, deleted, moved etc, it still might be processing things in background. This also the reason why commands like `rm -rf and cp` feel faster than windows copy and delete.
+
+### Setting Flathub and RPM Fusion Repositories
+
+```bash
+# Flathub
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+# RPM Fusion
+sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+```
 
 ## Software
 
