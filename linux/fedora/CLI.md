@@ -1,5 +1,3 @@
-# WSL Ubuntu Config
-
 ### Configuring DNS
 
 ```bash
@@ -16,7 +14,6 @@ sudo chattr +i /etc/resolv.conf # setting immutable
 
 ```bash
 sudo dnf upgrade
-sudo dnf install sl -y # just to test
 sudo dnf groupinstall "Development Tools" "Development Libraries" -y
 sudo dnf install gdb -y
 sudo dnf install cmake -y
@@ -25,6 +22,7 @@ sudo dnf install man-pages -y
 sudo dnf install dnf-plugins-core -y
 sudo dnf install p7zip -y
 sudo dnf install wget curl -y
+sudo dnf install git htop btop neofetch -y
 ```
 
 ### Shell Setup
@@ -71,15 +69,6 @@ Add `eval "$(atuin init zsh)"` at the end of `~/.zshrc`
 To delete command history use `atuin search --delete-it-all`
 To delete specific entries(prefixes) `atuin search --delete --search-mode prefix psql`
 
-### NVM(Node Version Manager)
-
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-# Install the nvm version you prefer
-# like nvm install 20.9
-```
-
-
 ### Using Stow for dotfile management
 
 Install using `sudo dnf install stow`
@@ -115,6 +104,14 @@ sudo dnf install gh --repo gh-cli
 
 ```bash
 sudo dnf install tmux -y
+```
+
+### NVM(Node Version Manager)
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+# Install the nvm version you prefer
+# like nvm install 20.9
 ```
 
 ### Python
@@ -225,3 +222,15 @@ URL="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tg
 cd /tmp && UUID=$(uuidgen) && mkdir "$UUID" && cd "$UUID" && wget "$URL" -O speedtest.tgz && tar -xzf speedtest.tgz
 LOCAL_BIN="$HOME/.local/bin" && mkdir -p "$LOCAL_BIN" && mv speedtest "$LOCAL_BIN/speedtest" && cd
 ```
+
+## Notes
+
+### Improving dnf speed
+
+Append to `/etc/dnf/dnf.conf` and the refresh with `sudo dnf upgrade --refresh`
+
+```conf
+max_parallel_downloads=10
+fastestmirror=True
+```
+

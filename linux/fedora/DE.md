@@ -3,11 +3,18 @@
 - To install with windows as dual boot ensure these things
   - Choose the `Advanced Custom Partion` Method while allocating disk for installtion.
   - `/boot/efi` -> On fedora installation you need to manually set the mount point. Choose `EFI File System` as partition format.
-  - `/` -> `Reformat` and `ext4`. Do not install as LVM as it would interfere with dual boot. Also if you `btrfs` you would be limited to only `read`.
+  - `/` -> `Reformat` and `ext4`. Do not install as LVM as it would interfere with dual boot. Also if you `btrfs` you would be limited to only `read`. `btrfs` can also be used as it has some good features to consider for root partition.
   - `/home` -> `No Reformat` and `ext4`
   - _zram & swap_ : zram of 8GiB is already setup in fedora is setup so would not need to have a swap partition. But if requirement arises you can always create and use one.
     - `cat /proc/swaps` to view current used swap devices including zram
     - `zramctl` to view zram info
+  - My current layout
+    - `/boot` as `ext4` 0.7Gib
+    - `/boot/efi` as `EFI/fat32` 0.7Gib
+    - `swap` 6Gib
+    - Remaning made into a `LVM group`
+      - `/` as `btrfs` 40Gib
+      - `/home` as `ext4`
 - It would be recommended to free space prior to opening the setup and defrag disk if needed.
 - Use this [Linux FileSystem for Windows by Paragon](https://www.paragon-software.com/home/linuxfs-windows/) to access linux filesystem on windows.
   - [ ] find if we can use this even when our `/home` or `/` are encrypted.
@@ -45,9 +52,9 @@
 - [x] **_CLI Based Application_** : These apps usually work all fine without ever having any major issues.
   - [x] Terminal Emulator
     - `Konsole` : Built in KDE terminal. Also enable proper `brahmic` script rendering in `Appearence > Complex Text Layout`
+      - Download Nerd fonts from here [here](https://github.com/shubhattin/neovim-config/releases/tag/nerd-fonts), currently using `Caskaydia Cove NF, 10.50`
     - Or you could use Tilix
 - > _Not using flatpaks or snaps for some cases might be a better option if a good up to date version is avilable in system repository. It is suitable for browesers, electron apps, video players, system monitor tools. And may be avoided for some utitlities, creative software for multimedia_
-- > _Fedora Flatpaks could be preferred over Flatub as they are supposed to more secure and taken up less space(atleast acc. to file size they show)_
 - Install **[Flatseal](https://flathub.org/apps/com.github.tchx84.Flatseal)** to manage flatpak application permissions.
 - Browsers
   - [x] Brave
@@ -63,6 +70,7 @@
     - [HandBrake](https://handbrake.fr/)
     - [x] [Shutter Encoder](https://www.shutterencoder.com/) : Available only via appimage on fedora
 - [Stacer](https://oguzhaninan.github.io/Stacer-Web/) to manage startup items, cleaner, etc.
+  - Use it to disable startup items
 - Download Manager
   - Xtreme Download Manager currently using [`v8.0.29bete`](https://github.com/subhra74/xdm/releases/tag/8.0.29)
     - To enable other file extensions like mp4 and mkv which are not marked for download by default can be enabled by going into `Settings > Browser Monitoring`, then find the list where it lists the extensions which will be automatically be taken over by xdm for download and add your desired extension if it already does not exists.
@@ -104,7 +112,7 @@
   - > :information_source: If the default file explorer formatter gives problems goto `Disks`
 - [x] Pdf Editor
   - Libre Office Draw
-  - [Pdf Rearranger](https://flathub.org/apps/com.github.jeromerobert.pdfarranger) for arranging spplitting and mergeing pdf
+  - [Pdf Arranger](https://flathub.org/apps/com.github.jeromerobert.pdfarranger) for arranging spplitting and mergeing pdf
 - [x] Compression tools
   - [Peazip](https://peazip.github.io/peazip-linux.html)
 - [x] An IME to type Indian languages
@@ -161,6 +169,13 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 - Disable Calendar from AutoStart (as it takes considerable memory we dont need it now)
   - `cp /etc/xdg/autostart/org.kde.kalendarac.desktop ~/.config/autostart` to have the config accessible in `AutoStart`
   - Then Open AutoStart and disable it.
+- To show a indiacator around mouse while you press a hotkey(in my case `meta+ctrl+s`)
+ - Goto Settings > Windows Management > Desktop Effect
+ - Then enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousThen enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousee
+- Uninstalling a rpm package
+  - find your package name `rpm -qa | grep package`
+  - uninstall using `rpm -e <PackageName>`
+- To lock a particular kernel version [read here](https://fedoramagazine.org/boot-earlier-kernel/)
 
 ## Backup Instructions for `/home` directory
 
