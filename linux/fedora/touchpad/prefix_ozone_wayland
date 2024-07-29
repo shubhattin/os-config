@@ -1,6 +1,9 @@
 #!/bin/env python3
 
-from rich import print
+try:
+    from rich import print
+except ImportError:
+    print("install 'rich' from pypi to display output in a way better way\n")
 
 # Making this script only executable in root
 # sudo pip3 install rich  # for displaying coloured output
@@ -48,4 +51,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

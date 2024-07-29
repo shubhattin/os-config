@@ -31,9 +31,9 @@
 - [x] Time and Date
 - [TouchPad Zoom In/Out Gestures](./touchpad/touchpad.md)
 - If touchpad settings dont show up in KDE settingss use `kcmshell6 kcm_touchpad`
-- [ ] **Dual Monitor Support** : You need to _mirror_ screen and set the monitor's resolution while connected and laptop's resolution while disconnected, you might as well explore `x11` config for that. Click `Display Settings` on the home screen.
-  - Enable fractional scaling to enable ui zoom like 125%, 150% etc
-  - > You might face problems with fractional scaling in mint as its experimental. To fix this you could temporarily or permanently switch to resolution close `dimension/scaling factor`, although this would come at cost of reduced sharpness and reduced screen quality(this also save some power).
+-  **Dual Monitor Support**
+  - [x] Fractional Scaling works both in x11 as well as wayland sessions
+  - [ ] Not able to set fractional scaling to 100% while external monitor is connected and restore it to 125%. It works but not with proper scaling support as expected.
 - **GPU Setup**
   - list GPUs `lspci -vnn | grep VGA`
   - Follow Instruction [here](https://www.tecmint.com/install-nvidia-drivers-in-linux/) to install nvidia drivers. Also read [this](https://docs.fedoraproject.org/en-US/quick-docs/set-nvidia-as-primary-gpu-on-optimus-based-laptops/) if you wish to setup nvidia as primary gpu in fedora.
@@ -41,9 +41,9 @@
       - `lsmod | grep nouveau`
       - `lsmod | grep nvidia`
       - `lspci -k | grep -A 3 -i "VGA"` to view installed drivers in use
+      - `prime-run glxinfo | grep 'OpenGL renderer'` checking opengl rendered
+  - Use [`nvidia-prime`](./scripts/prime-run) after adding as `/bin/prime-run` with executable permissions to run apps with dedicated gpu.
   - Check nvidia kernel module version `modinfo -F version nvidia`
-  - [ ] Explore more on Dual GPU support in fedora. Also find ways to use Dedicated GPU when needed
-    - [ ] [Setting Nvidia Optimus](https://rpmfusion.org/Howto/Optimus) for dediacted gpu support 
   - [ ] Try to run tensorflow with nvidia gpu in both dual gpu and single gpu devices
   - [x] Use **[Mission Center](https://missioncenter.io/)** or **[Resources](https://flathub.org/apps/net.nokyan.Resources)** to verify and see GPU Usage as it lists all major hardware resources.
   - **Testing GPU** : Install glmark2 `sudo dnf install glmark2`
@@ -84,9 +84,8 @@ sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfre
   - [x] Chrome
 - Video Player
   - [x] VLC Media Player
-    - :heavy_check_mark: for now vlc seems to be fine and could not find a good alternative for advanced player like powerdvd
 - Partition Manager : Built in KDE Partition Manager
-  - [Disk Usage Analyser](https://flathub.org/apps/org.gnome.baobab)
+  - Filelight for disk usage analysis
 - Video Converter
   - [x] Alternative(s) to Wondershare i converter
     - [HandBrake](https://handbrake.fr/)

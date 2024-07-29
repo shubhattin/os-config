@@ -22,7 +22,7 @@ sudo dnf install man-pages -y
 sudo dnf install dnf-plugins-core -y
 sudo dnf install p7zip -y
 sudo dnf install wget curl -y
-sudo dnf install git htop btop neofetch -y
+sudo dnf install git htop btop inxi neofetch -y
 ```
 
 ### Shell Setup
