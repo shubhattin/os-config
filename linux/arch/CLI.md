@@ -13,16 +13,8 @@ sudo chattr +i /etc/resolv.conf # setting immutable
 ### Download few Basic packages
 
 ```bash
-sudo dnf upgrade
-sudo dnf groupinstall "Development Tools" "Development Libraries" -y
-sudo dnf install gdb -y
-sudo dnf install cmake -y
-sudo dnf install readline-devel unzip zip -y
-sudo dnf install man-pages -y
-sudo dnf install dnf-plugins-core -y
-sudo dnf install p7zip -y
-sudo dnf install wget curl -y
-sudo dnf install git htop btop inxi neofetch -y
+sudo pacman -Syu
+sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi neofetch util-linux
 ```
 
 ### Shell Setup
@@ -30,18 +22,19 @@ sudo dnf install git htop btop inxi neofetch -y
 #### zsh
 
 ```bash
-sudo dnf upgrade --refresh
-sudo dnf install zsh -y
-# changinf default shell to zsh
+sudo pacman -S zsh
+# changinf default shell to zsh, you can also do it with sudo to make zsh default for root
+# restart to make changes take effect
 chsh -s $(which zsh)
 
+# Installing ohmyzsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-sudo dnf install powerline-fonts -y
+sudo pacman -S powerline-fonts
 ```
 
 #### Using zodide instead of cd
 
-Install [zodide](https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation) or by `sudo dnf install zoxide -y`.
+Install [zodide](https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation) or by `sudo pacman -S zoxide`.
 Add at end of .zshrc
 
 ```bash
@@ -51,7 +44,7 @@ eval "$(zoxide init --cmd cd zsh)"
 Refer [this video](https://www.youtube.com/watch?v=aghxkpyRVDY).
 Install a fuzzy finder to use in `cdi` command
 ```bash
-sudo dnf install fzf -y
+sudo pacman -S fzf
 # use cdi as a fuzzy finder in zoxide db
 # also to launch interactive shell, start typing the path part press space followed by TAB
 # This should bring up a filtered interactive window
@@ -71,7 +64,7 @@ To delete specific entries(prefixes) `atuin search --delete --search-mode prefix
 
 ### Using Stow for dotfile management
 
-Install using `sudo dnf install stow`
+Install using `sudo pacman -S stow`
 
 Run command in the directory you have stored your dotfiles(the filestructure should correspond to $HOME directory).
 You need to run this command after each change made to the dotfiles.
@@ -84,26 +77,19 @@ Use `.stow-local-ignore` to ignore files. Example [dotfile repo](https://github.
 ### Git
 
 ```bash
-sudo dnf upgrade --refresh
-sudo dnf install git -y
-
-# Authentication to Github should be done through gh CLI
-
 git config --global init.defaultBranch main # default branch name
 git config --global core.autocrlf input
 git config --global core.safecrlf true
 # ^ We are setting the autocrlf to always to be '\n' instead of '\r\n'
 
 # Github CLI
-sudo dnf install 'dnf-command(config-manager)'
-sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-sudo dnf install gh --repo gh-cli
+sudo pacman -S github-cli
 ```
 
 ### tmux
 
 ```bash
-sudo dnf install tmux -y
+sudo pacman -S tmux
 ```
 
 ### NVM(Node Version Manager)
@@ -119,11 +105,10 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 
 ```bash
-sudo dnf upgrade --refresh
-sudo dnf install python3
+sudo pacman -S python
 
 # Other python packages
-sudo dnf install python3-pip python3-tkinter
+sudo pacman -S python-pip tk
 ```
 
 Fixing pip based error for python>=3.11
@@ -142,46 +127,26 @@ break-system-packages = true
 ### _**NeoVim**_
 
 ```bash
-sudo dnf upgrade --refresh
-sudo dnf install -y lua luarocks
-sudo dnf install -y neovim
+# Installing Lua, Luarocks, Neovim, Ripgrep, Lazygit
+sudo pacman -S lua luarocks neovim ripgrep lazygit
 
-# For Copy and Paste in nvim now using using native clip.exe and pwsh commands instead of win32yannk.exe
-
-# Grep Tool
-sudo dnf install ripgrep -y
-
-# LazyGit tool
-sudo dnf copr enable atim/lazygit -y
-sudo dnf install lazygit -y
-```
-
-Install a clipboard provider for nvim in fedora if you face problems in using system clipboard. Not encountered any yet.
-
-To use nvim of wsl properly in vscode
-
-```json
-"vscode-neovim.useWSL": true,
+# Install Clipboard Providers
+sudo pacman -S xclip wl-clipboard
 ```
 
 ### Java
 
-Java might be preinstalled check the version or search for your appropriate package version with
-`sudo dnf search openjdk`
-
 ```bash
-# sudo dnf install java-21-openjdk-devel.x86_64 -y
-update-alternatives --config java
+sudo pacman -S jdk-openjdk
 ```
 
-Add `JAVA_HOME` Environment variable to `/etc/environment`.
-Write the output path `update-alternatives --config java`
+Add `JAVA_HOME` Environment variable to `/etc/environment` or in PATH.
 
 ### PostgreSql
 
 ```bash
-sudo dnf upgrade --refresh
-sudo dnf install postgresql-server postgresql-contrib -y
+sudo pacman -Syu
+sudo pacman -S postgresql
 
 # enable psql start on startup
 sudo systemctl enable postgresql
@@ -206,13 +171,14 @@ For more [refer here](https://docs.fedoraproject.org/en-US/quick-docs/postgresql
 ### Go
 
 ```bash
-sudo dnf install -y golang
+sudo pacman -S go
 ```
 
 ### Rust
 
+For development purposes you should prefer the `rustup` method of installation istead of directly installing it as `sudo pacman -S rust`.
 ```bash
-sudo dnf install -y rust cargo
+sudo pacman -S rustup
 ```
 
 ### Speedtest CLI
@@ -221,16 +187,5 @@ sudo dnf install -y rust cargo
 URL="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz"
 cd /tmp && UUID=$(uuidgen) && mkdir "$UUID" && cd "$UUID" && wget "$URL" -O speedtest.tgz && tar -xzf speedtest.tgz
 LOCAL_BIN="$HOME/.local/bin" && mkdir -p "$LOCAL_BIN" && mv speedtest "$LOCAL_BIN/speedtest" && cd
-```
-
-## Notes
-
-### Improving dnf speed
-
-Append to `/etc/dnf/dnf.conf` and the refresh with `sudo dnf upgrade --refresh`
-
-```conf
-max_parallel_downloads=10
-fastestmirror=True
 ```
 
