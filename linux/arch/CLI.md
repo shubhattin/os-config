@@ -13,8 +13,8 @@ sudo chattr +i /etc/resolv.conf # setting immutable
 ### Download few Basic packages
 
 ```bash
-sudo pacman -Syu
-sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi neofetch util-linux
+sudo pacman -Syyu # force fetch
+sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi neofetch util-linux tree bat lf
 ```
 
 ### Shell Setup
@@ -22,19 +22,19 @@ sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl
 #### zsh
 
 ```bash
-sudo pacman -S zsh
+# Installing zsh and some fonts
+sudo pacman -S zsh powerline-fonts
 # changinf default shell to zsh, you can also do it with sudo to make zsh default for root
 # restart to make changes take effect
 chsh -s $(which zsh)
 
 # Installing ohmyzsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-sudo pacman -S powerline-fonts
 ```
 
 #### Using zodide instead of cd
 
-Install [zodide](https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation) or by `sudo pacman -S zoxide`.
+Install [zodide](https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation) or by `sudo pacman -S zoxide fzf`.
 Add at end of .zshrc
 
 ```bash
@@ -73,6 +73,7 @@ stow .
 ```
 
 Use `.stow-local-ignore` to ignore files. Example [dotfile repo](https://github.com/shubhattin/dotfiles).
+Use `stow --adopt .` to overwrite the files but in this method the dotfiles directory files will be overwritetn with the confilicting version of that file. Or make sure that you have commited all your files to git before executing this so you could `git restore .`
 
 ### Git
 
@@ -105,10 +106,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 
 ```bash
-sudo pacman -S python
-
-# Other python packages
-sudo pacman -S python-pip tk
+sudo pacman -S python python-pip tk
 ```
 
 Fixing pip based error for python>=3.11
@@ -189,3 +187,85 @@ cd /tmp && UUID=$(uuidgen) && mkdir "$UUID" && cd "$UUID" && wget "$URL" -O spee
 LOCAL_BIN="$HOME/.local/bin" && mkdir -p "$LOCAL_BIN" && mv speedtest "$LOCAL_BIN/speedtest" && cd
 ```
 
+
+### Basic Pacman Usage Syntax
+
+[Refer Arch Wiki](https://wiki.archlinux.org/title/Pacman) for more clarity and detail.
+
+#### `pacman -S`
+
+- `pacman -S pkg` : to install a package
+- `pacman -Syu` : System Upgrade
+  - `pacman -Sy` : Sync package Database
+  - `pacman -Syy` : Force Sync Packkages, you could add `u` flag to update
+- `pacman -Syyuw` : to download the updates but install them later manually
+- `pacman -Ss pkg` : to search a package in the package repos
+- `pacman -Sc` : remove unused cache which might be old and not needed
+
+#### `pacman -R`
+
+- `pacman -R` : to remove a package
+- `pacman -Rs` : also removes depenencies along with it
+- **_`pacman -Rns`_** : removes some non system dotfiles as well, **recommended way to remove**
+
+#### `pacman -Q`
+
+- `pacman -Q` : list out all packages installed, pip the output to `wc -l` to count the number of lines
+- `pacman -Qe` : packages explicitly installed by us or some other program
+- `pacman -Qeq` : the `q` flag gets rid of the version number and just gives info on name
+- `pacman -Qn` : to list system packages instaleed from main repos
+- `pacman -Qm` : to list AUR packages
+- `pacman -Qdt` : to list orphan packages, which are no longer needed
+- `pacman -Qs pkg` : to search for package in installed apps
+
+#### Enabling few options in `/etc/pacman.conf`
+
+Uncomment `Color`, `CheckSpace`, `ILoveCandy` to enable coloured output, check for available space and modify the loading indicator of pacman respectively.
+Also uncomment `VerbosePkgLists` to have a detailed breakdown on package changes in form of a multiline list instead of a paragraph.
+Also set `ParallelDownloads = 5` to allow parallel downloads.
+
+#### Updating `/etc/pacman.d/mirrorlist`
+
+If you are facing problems with mirrors. You could use `reflector` for this via. Save the output to mirrorlist file but also keep backup of previous file.
+`sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak`
+
+```bash
+reflector --verbose --protocol https --sort rate --latest 20 --download-timeout
+```
+
+In Endeavour OS you use the Welcome app to update mirrors.
+
+
+### Paru Installation and Usage
+
+You could prefer paru over some other aur helper like yay. Install it like this.
+> :warning: Paru by default shows you the 
+
+```bash
+sudo pacman -Syu
+sudo pacman -S lf bat # lf file manager, bat for syntax highlighted printing
+
+# Install paru the manual method
+
+sudo pacman -S --needed base-devel
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -si
+```
+
+If you already have yay and wish to unistall it then do `sudo paru -Rns yay` and also prefer creating a prefix for paru.
+```bash
+alias yay=paru
+```
+
+#### Some basic paru commands
+
+Paru apart from being a aur helper is also a wrapper around pacman.
+
+- never run `paru` or `yay` or any AUR helper with `sudo`
+- `paru -Sua` to upgrade aur packages only
+  - add the `--upgrademenu` flag to pick and choose particular aur packages to upgrade
+- `paru -Sua --fm lf or nvim` : opens the whole package file rather than just printing out `PKGBUILD` with a file manager of your choice
+- `paru -Qua` : query updatable aur packages
+
+my [config file](https://github.com/shubhattin/dotfiles/blob/main/.config/paru/paru.conf). The constraints forced via a fie manager are like a necessity if you wish to have a safer and more stable experience using aur.
