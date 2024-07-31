@@ -106,10 +106,17 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 
 ```bash
-sudo pacman -S python python-pip tk
+sudo pacman -S python python-pipx tk
+# install common needed packages via pacman instead of pip or pipx
+sudo pacman -S python-rich python-requests python-poetry python-pipenv ipython
 ```
 
-Fixing pip based error for python>=3.11
+#### Never install using `sudo pip` or even `pipx` directly or else you would potentially break your system
+
+Never do `sudo pip install pkg`.
+
+Even this would not be recommended but if you do wish to install a user level python package in `~/.local/lib/python3.12`. Before finally installaling using pip try to find the package as `sudo pacman -Ss pkg`.
+You could make some changes, Fixing pip based error for python>=3.11
 
 ```bash
 sudo mv /usr/lib/python3.12/EXTERNALLY-MANAGED /usr/lib/python3.12/EXTERNALLY-MANAGED.old
