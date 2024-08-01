@@ -48,7 +48,7 @@
   - **Intel GPU**
     - `sudo pacman -S intel-ucode mesa intel-media-driver libva-mesa-driver`
   - Follow Instruction [here](https://dev.to/vitorvargas/how-to-install-the-nvidia-driver-on-archlinux-5bgc)
-    - `sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime nvidia-dkms`
+    - `sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime`
     - also if using `linux-lts` then `sudo pacman -S nvidia-lts`
     - Check if `nouveau` or the proprietary nvidia drivers are running
       - `lsmod | grep nouveau`
@@ -58,7 +58,8 @@
   - Check nvidia kernel module version `modinfo -F version nvidia`
   - [ ] Try to run tensorflow with nvidia gpu in both dual gpu and single gpu devices
   - [ ] optimus manager in x11
-  - [x] Use **[Mission Center](https://aur.archlinux.org/packages/mission-center)** or **[Resources](https://aur.archlinux.org/packages/resources)** to verify and see GPU Usage as it lists all major hardware resources. `sudo paru -S mission-center resources`
+  - [x] Use **[Mission Center](https://aur.archlinux.org/packages/mission-center)** or **[Resources](https://aur.archlinux.org/packages/resources)** to verify and see GPU Usage as it lists all major hardware resources. `paru -S mission-center resources`
+  - For CUDA and cuDNN `sudo pacman -S cuda cudnn`
   - **Testing GPU** : Install glmark2 `sudo pacman -S glmark2`
     - Testing default/primary gpu : `glmark2`, `glmark2-wayland`
     - Testing Nvidia GPU specifically : `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glmark2`
@@ -134,15 +135,16 @@
   - [Posicle](https://flathub.org/apps/com.system76.Popsicle)
   - > :information_source: If the default file explorer formatter gives problems goto `Disks`
 - [x] Pdf Editor
-  - Libre Office Draw
-  - [Pdf Arranger](https://flathub.org/apps/com.github.jeromerobert.pdfarranger) for arranging spplitting and mergeing pdf
+  - Libre Office install using [this](https://www.linuxfordevices.com/tutorials/linux/install-libreoffice-on-arch)
+  - [Pdf Arranger](https://flathub.org/apps/com.github.jeromerobert.pdfarranger) for arranging spplitting and mergeing pdf. `paru -S pdfarranger`
 - [x] Compression tools
-  - [Peazip](https://peazip.github.io/peazip-linux.html)
+  - [Peazip](https://peazip.github.io/peazip-linux.html) `paru -S peazip`
 - [x] An IME to type Indian languages
   - **Keyboard Layout Method** (Simple and no IME)
     - Goto `Keyboard > Layouts` and then add the language or layout you need, for eg: Hindi -> Hindi(Wx) and set a display text.
     - Default shortcut to change keyboard layout is `Meta+Alt+K`
   - **Input Method Editor**
+    - `sudo pacman -S ibus` && `paru -S ibus-m17n` && restart
     - The above keyboard layout method can also be used in this approach as it has both keyboard layout and IME's
     - On wayland session open Keyboard > Virtual Keyboard and set select IBus Wayland and apply.
     - Search for Input Method Selector and set preferences of ibus.
@@ -189,15 +191,9 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 - Font
   - to install fonts locally copy it to `~/.local/share/fonts` folder. then `sudo fc-cache -f -v`
   - restart the computer to use the fonts properly in the terminal
-- Disable Calendar from AutoStart (as it takes considerable memory we dont need it now)
-  - `cp /etc/xdg/autostart/org.kde.kalendarac.desktop ~/.config/autostart` to have the config accessible in `AutoStart`
-  - Then Open AutoStart and disable it.
 - To show a indiacator around mouse while you press a hotkey(in my case `meta+ctrl+s`)
  - Goto Settings > Windows Management > Desktop Effect
  - Then enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousThen enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousee
-- Uninstalling a rpm package
-  - find your package name `rpm -qa | grep package`
-  - uninstall using `rpm -e <PackageName>`
 
 ## Backup Instructions for `/home` directory
 

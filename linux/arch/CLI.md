@@ -239,6 +239,8 @@ If you are facing problems with mirrors. You could use `reflector` for this via 
 
 ```bash
 reflector --verbose --protocol https --sort rate --latest 20 --download-timeout
+# current command i use
+reflector --verbose -c IN -c SG --protocol https --sort age --latest 20 --download-timeout 5
 ```
 
 In Endeavour OS you use the Welcome app to update mirrors.
