@@ -10,6 +10,8 @@ Save the [file](./run_ozone_wayland_flags) below as `/bin/run_ozone_wayland_flag
 
 > :warning: **_You might experience that even after changing the `Exec` field it still not works. Then the ways left are either to register the shortcuts directly through commands rather than application launch shortcut. Or it has also been noticed that whenever fedora restarted after a ctricital system update it updated the Exec field as well._**
 
+**Reload KDE after making changes to shortcut file with `systemctl --user restart plasma-plasmashell`**
+
 ### Solving `Exec` Being Reset after update from Flathub
 
 Save the [file](./prefix_ozone_wayland) as `/bin/prefix_ozone_wayland` with permissions `754` and owner `root:root`. Also add a systemd init script by saving as `/etc/systemd/system/prefix_ozone_wayland.service` also with `754 and root:root`

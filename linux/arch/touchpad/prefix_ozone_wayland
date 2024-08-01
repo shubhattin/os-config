@@ -6,20 +6,23 @@ except ImportError:
     print("install 'rich' from pypi to display output in a way better way\n")
 
 # Making this script only executable in root
-# sudo pip3 install rich  # for displaying coloured output
 # sudo chown root:root /bin/prefix_ozone_wayland
 # sudo chmod 754 /bin/prefix_ozone_wayland
 
 
 def parse_file(file_path):
     file_names = []
-    with open(file_path, "r", encoding="utf-8") as file:
-        for line in file:
-            # Remove any comment and strip whitespace
-            stripped_line = line.split("#", 1)[0].strip()
-            # Ignore empty lines
-            if stripped_line:
-                file_names.append(stripped_line)
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            for line in file:
+                # Remove any comment and strip whitespace
+                stripped_line = line.split("#", 1)[0].strip()
+                # Ignore empty lines
+                if stripped_line:
+                    file_names.append(stripped_line)
+    except FileNotFoundError:
+        print(f"[red bold]Config file [white]{file_path}[/] not found[/]")
+        exit(-1)
     return file_names
 
 
@@ -28,9 +31,13 @@ def main():
     OZONE_WAYLAND_PATH = "/usr/bin/run_ozone_wayland_flags"
     for file in FILES:
         lines = []
-        with open(file, "r", encoding="utf-8") as fl:
-            lines = fl.readlines()
-        new_lines = []
+        try:
+            with open(file, "r", encoding="utf-8") as fl:
+                lines = fl.readlines()
+            new_lines = []
+        except FileNotFoundError:
+            print(f"[red]File not found : [white]{file}[/][/]")
+            continue
         change_count = 0
         for line in lines:
             new_line = line

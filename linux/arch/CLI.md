@@ -106,9 +106,10 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 
 ```bash
-sudo pacman -S python python-pipx tk
+sudo pacman -S python python-pip python-pipx tk
+# pipx can be used to install cli apps in pip like black, but prefer direct pacman method
 # install common needed packages via pacman instead of pip or pipx
-sudo pacman -S python-rich python-requests python-poetry python-pipenv ipython
+sudo pacman -S python-rich python-requests python-poetry python-pipenv ipython python-black
 ```
 
 #### Never install using `sudo pip` or even `pipx` directly or else you would potentially break your system
@@ -233,7 +234,7 @@ Also set `ParallelDownloads = 5` to allow parallel downloads.
 
 #### Updating `/etc/pacman.d/mirrorlist`
 
-If you are facing problems with mirrors. You could use `reflector` for this via. Save the output to mirrorlist file but also keep backup of previous file.
+If you are facing problems with mirrors. You could use `reflector` for this via `sudo pacman -S reflector`. Save the output to mirrorlist file but also keep backup of previous file.
 `sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak`
 
 ```bash
