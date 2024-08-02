@@ -5,6 +5,8 @@
 - EOS Installtion Guide
   - For Vanilla KDE Installation uncheck EndeavourOS Settings under KDE Desktop
   - Would recommend to setup the linux-lts kernel later on after installation.
+  - You would need to setup the breeze theme for sddm and custom background for sddm.
+  - Background for Lock Screen is also configured seperately in Lock Screen in Settings.
 - To install with windows as dual boot ensure these things
   - Choose Manual Partitioning
   - `/boot/efi` -> type `fat32`, `reformated`
@@ -57,7 +59,11 @@
       - `prime-run glxinfo | grep 'OpenGL renderer'` checking opengl renderer
   - Check nvidia kernel module version `modinfo -F version nvidia`
   - [ ] Try to run tensorflow with nvidia gpu in both dual gpu and single gpu devices
-  - [ ] optimus manager in x11
+  - **Optimus Manager for X11**
+    - `paru -S optimus-manager-git optimus-manager-qt`
+    - `sudo systemctl enable optimus-manager` after restart
+    - Set AutoStart by launching Optimus manager qt and settings autostart.
+    - You should use `Hybrid Mode` by default. And untill not required do not switch to Nvidia and prefer using `prime-run` as it saves power.
   - [x] Use **[Mission Center](https://aur.archlinux.org/packages/mission-center)** or **[Resources](https://aur.archlinux.org/packages/resources)** to verify and see GPU Usage as it lists all major hardware resources. `paru -S mission-center resources`
   - For CUDA and cuDNN `sudo pacman -S cuda cudnn`
   - **Testing GPU** : Install glmark2 `sudo pacman -S glmark2`
@@ -70,6 +76,28 @@
   - Setup Lid Close and other such options in `Power Management`
   - _Sleep function might malfunctioning, insttalling gpu drivers and latest linux kernel fixed laptop overheating in my case_,
 - > :information_source: While using a usb drive or any any external storage device wait for the usb to eject and disappear from file explorer. Its because if something shows to be copied, deleted, moved etc, it still might be processing things in background. This also the reason why commands like `rm -rf and cp` feel faster than windows copy and delete.
+- Others Apps I use
+ - Surfshark: `paru -S surfshark-client`
+
+#### Fixing SDDM scaling
+
+Currently X11 is used for display, so it does not handles scaaling correcly we could set it [wayland](https://wiki.archlinux.org/title/SDDM#Wayland) by changinf `/etc/sddm.conf.d/10-wayland.conf`
+
+```config
+[General]
+DisplayServer=wayland
+GreeterEnvironment=QT_WAYLAND_SHELL_INTEGRATION=layer-shell
+
+[Wayland]
+CompositorCommand=kwin_wayland --drm --no-lockscreen --no-global-shortcuts --locale1
+```
+
+This shall fix the scaling issue as wayland is better at detecting scaling factor automatically. And also it displays a black screen after login. You could also use X11 for scaling purpose by editing `/etc/sddm.conf.d/hidpi.conf`. In my case scaling factor is 1.25
+
+```config
+[General]
+GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
+```
 
 ## Software
 
@@ -94,7 +122,7 @@
 - Video Converter
   - [x] Alternative(s) to Wondershare i converter
     - [HandBrake](https://handbrake.fr/) `sudo pacman -S handbrake`
-    - [x] [Shutter Encoder](https://www.shutterencoder.com/) `paru -S shutter-encoder-bin`
+    - [Shutter Encoder](https://www.shutterencoder.com/) `paru -S shutter-encoder-bin`
 - Download Manager
   - Xtreme Download Manager currently using [`v8.0.29bete`](https://github.com/subhra74/xdm/releases/tag/8.0.29) `paru -S xdman-beta-bin`
     - To enable other file extensions like mp4 and mkv which are not marked for download by default can be enabled by going into `Settings > Browser Monitoring`, then find the list where it lists the extensions which will be automatically be taken over by xdm for download and add your desired extension if it already does not exists.

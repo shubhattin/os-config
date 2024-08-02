@@ -249,18 +249,14 @@ In Endeavour OS you use the Welcome app to update mirrors.
 ### Paru Installation and Usage
 
 You could prefer paru over some other aur helper like yay. Install it like this.
-> :warning: Paru by default shows you the 
+> :warning: Paru by default shows you the
 
 ```bash
 sudo pacman -Syu
 sudo pacman -S lf bat # lf file manager, bat for syntax highlighted printing
 
-# Install paru the manual method
-
-sudo pacman -S --needed base-devel
-git clone https://aur.archlinux.org/paru.git
-cd paru
-makepkg -si
+# Install paru with the chaotic-aur
+sudo pacman -S chaotic-aur/paru
 ```
 
 If you already have yay and wish to unistall it then do `sudo paru -Rns yay` and also prefer creating a prefix for paru.
@@ -279,3 +275,23 @@ Paru apart from being a aur helper is also a wrapper around pacman.
 - `paru -Qua` : query updatable aur packages
 
 my [config file](https://github.com/shubhattin/dotfiles/blob/main/.config/paru/paru.conf). The constraints forced via a fie manager are like a necessity if you wish to have a safer and more stable experience using aur.
+
+
+### Enable Chaotic AUR
+
+After `sudo su` enter these commands. Refer the [docs](https://aur.chaotic.cx/docs)
+```bash
+pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+pacman-key --lsign-key 3056513887B78AEB
+pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+```
+
+Add the line to `/etc/pacman.conf` if not already added
+
+```config
+[chaotic-aur]
+Include = /etc/pacman.d/chaotic-mirrorlist
+```
+
+> **You Don't Need to Manually change `paru -S pkg` commands to `sudo pacman -S chaotic-aur/pkg` as paru automatically prefers chaotic-aur over aur**
