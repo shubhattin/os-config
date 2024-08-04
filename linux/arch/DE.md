@@ -6,7 +6,7 @@
   - For Vanilla KDE Installation uncheck EndeavourOS Settings under KDE Desktop
   - Would recommend to setup the linux-lts kernel later on after installation.
   - You would need to setup the breeze theme for sddm and custom background for sddm.
-  - Background for Lock Screen is also configured seperately in Lock Screen in Settings.
+  - Background for Lock Screen is also configured seperately in _Screen Locking_ in Settings.
 - To install with windows as dual boot ensure these things
   - Choose Manual Partitioning
   - `/boot/efi` -> type `fat32`, `reformated`
@@ -26,12 +26,6 @@
   - [ ] find if we can use this even when our `/home` or `/` are encrypted.
 
 ## Basic Setup
-- Kernel
-  - In EOS installtion if you did'nt chose linux-lts lts kernel you should get the latest kernels by default
-  - list the current kernel version being used `uname -r`
-  - to install and setup linux-lts kernel follow [this](https://itsfoss.com/switch-kernels-arch-linux/) guide.
-  - Any custom changes made to `/etc/default/grub` should be in end after `# Custom` line.
-  - You should prefer linux latest kernel for improved hardware support for you laptop or same latest hardware. (in my case i faced problem with linux-lts in laptop)
 - Connectivity
   - [x] Bluetooth : In [EOS](https://endeavouros.com/) you would need to `sudo systemctl enable bluetooth`
   - [x] WiFi
@@ -59,7 +53,10 @@
       - `prime-run glxinfo | grep 'OpenGL renderer'` checking opengl renderer
   - Check nvidia kernel module version `modinfo -F version nvidia`
   - [ ] Try to run tensorflow with nvidia gpu in both dual gpu and single gpu devices
-  - **Optimus Manager for X11**
+  - **[EnvyControl](https://github.com/bayasdev/envycontrol)**
+    - This is a better gpu mode setter than optmimus manager and supoorts all major distros. It also seems to have wayland support.
+    - `paru -S envycontrol` and follow this add a plugin in taskbar [Optimus GPU Switcher](https://github.com/enielrodriguez/optimus-gpu-switcher)
+  - Optimus Manager for X11
     - `paru -S optimus-manager-git optimus-manager-qt`
     - `sudo systemctl enable optimus-manager` after restart
     - Set AutoStart by launching Optimus manager qt and settings autostart.
@@ -68,16 +65,35 @@
   - For CUDA and cuDNN `sudo pacman -S cuda cudnn`
   - **Testing GPU** : Install glmark2 `sudo pacman -S glmark2`
     - Testing default/primary gpu : `glmark2`, `glmark2-wayland`
-    - Testing Nvidia GPU specifically : `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glmark2`
+    - Testing Nvidia GPU specifically : `prime-run glmark2` OR `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glmark2`
     - While test is in progress watch the gpu usage in Mission Center. At the end it should give you a score for the benchmark.
 - **X11**
   - You might need to configure your mouse/touchpad on your initial login
 - _Power Management_ : If you feel that your system is not utilizing space in optimal way you could use [tlp](https://askubuntu.com/questions/1309396/how-to-increase-battery-life-on-ubuntu-20-04-and-what-power-saving-software-shou) and remove it see [here](https://www.baeldung.com/linux/tlp-disable)
   - Setup Lid Close and other such options in `Power Management`
   - _Sleep function might malfunctioning, insttalling gpu drivers and latest linux kernel fixed laptop overheating in my case_,
+- Currently using the [Dark Matter](https://github.com/VandalByte/darkmatter-grub2-theme/tree/main) theme for grub
 - > :information_source: While using a usb drive or any any external storage device wait for the usb to eject and disappear from file explorer. Its because if something shows to be copied, deleted, moved etc, it still might be processing things in background. This also the reason why commands like `rm -rf and cp` feel faster than windows copy and delete.
-- Others Apps I use
- - Surfshark: `paru -S surfshark-client`
+
+#### Installing linux-lts kernel
+
+- In EOS installtion if you did'nt chose linux-lts lts kernel you should get the latest kernels by default
+- `sudo pacman -S linux-firmware linux-lts linux-lts-headers`, you should keep linux-lts as a backup in case main kernel fails.
+- we dont need to do `sudo mkcpinitio -p linux-lts` as this auto handled by pacman. But you still need to reconfig grub with `sudo grub-mkconfig -o /boot/grub/grub.cfg`
+- `uname -r` to get current linux kernel version being used
+- to install and setup linux-lts kernel follow [this](https://itsfoss.com/switch-kernels-arch-linux/) guide.
+- Any custom changes made to `/etc/default/grub` should be in end after `# Custom` line.
+- You should prefer linux latest kernel for improved hardware support for you laptop or same latest hardware. (in my case i faced problem with linux-lts in laptop)
+- If you are a current linux kernel version which you want to _lock_, then goto `/etc/pacman.conf` and uncomment the line `#IgnorePkg  = ` and add `linux` to end of it. this should prevent linux kernel updates.
+
+Add this to end of `/etc/default/grub`
+
+```grub
+# Custom
+GRUB_DISABLE_SUBMENU=y
+GRUB_DEFAULT=saved
+GRUB_SAVEDEFAULT=true
+```
 
 #### Fixing SDDM scaling
 
@@ -106,18 +122,19 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
     - `Konsole` : Built in KDE terminal. Also enable proper `brahmic` script rendering in `Appearence > Complex Text Layout`
       - Download Nerd fonts from here [here](https://github.com/shubhattin/neovim-config/releases/tag/nerd-fonts), currently using `Caskaydia Cove NF, 10.50`
     - Or you could use Tilix
+  - Visual Studio Code `paru -S visual-studio-code-bin`
 - > _Not using flatpaks or snaps for some cases might be a better option if a good up to date version is avilable in system repository. It is suitable for browesers, electron apps, video players, system monitor tools. And may be avoided for some utitlities, creative software for multimedia_
 - Flatpak Setup
- - `sudo pacman -S flatpak discover`
- - Then open the discover app and in settings enable flathub. now you have a gui for flathub package management.
- - > **_In general you should prefer [AUR](https://aur.archlinux.org/) over flatpaks_**
+  - `sudo pacman -S flatpak discover`
+  - Then open the discover app and in settings enable flathub. now you have a gui for flathub package management.
+  - > **_In general you should prefer [AUR](https://aur.archlinux.org/) over flatpaks_**
 - Browsers
   - [x] Brave `paru -S brave-bin`
   - [x] Edge `flatpak install flathub com.microsoft.Edge` or `paru -S microsoft-edge-stable-bin`
   - [x] Chrome
 - Video Player
   - [x] VLC Media Player `sudo pacman -S vlc`
-- Partition Manager : Built in KDE Partition Manager
+- Partition Manager : Built in KDE Partition Manager `sudo pacman -S partitionmanager gparted`
   - Filelight for disk usage analysis `sudo pacman -S filelight`
 - Video Converter
   - [x] Alternative(s) to Wondershare i converter
@@ -189,6 +206,8 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
   - [OBS Studio](https://obsproject.com/) for advanced purposes
   - [Kazam](https://github.com/henrywoo/kazam)
     > To Create keyboard shortcuts goto `Keyboard > Shortcuts`
+- Others Apps I use
+  - Surfshark: `paru -S surfshark-client`
 
 ### VS Code Keybindings Fix
 
@@ -219,6 +238,8 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 - Font
   - to install fonts locally copy it to `~/.local/share/fonts` folder. then `sudo fc-cache -f -v`
   - restart the computer to use the fonts properly in the terminal
+- To enable `24 Hour Time Format` you need to change time Format in Settngs > Region and Language.
+- To disable Auto Restore preopened apps before logout/shutdown/restart goto Settings > Session > Desktop Session. Select 'Start with an Empty Session` under 'On Login, Launch Apps that were open'. This causes some unexpected behaviour.
 - To show a indiacator around mouse while you press a hotkey(in my case `meta+ctrl+s`)
  - Goto Settings > Windows Management > Desktop Effect
  - Then enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousThen enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousee

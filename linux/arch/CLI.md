@@ -234,6 +234,7 @@ Also set `ParallelDownloads = 5` to allow parallel downloads.
 
 #### Updating `/etc/pacman.d/mirrorlist`
 
+**_Upadte mirros necessarily to have a better speed for installing packages either manually or via EOS welcome_**
 If you are facing problems with mirrors. You could use `reflector` for this via `sudo pacman -S reflector`. Save the output to mirrorlist file but also keep backup of previous file.
 `sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak`
 
