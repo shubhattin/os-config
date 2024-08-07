@@ -14,7 +14,7 @@ sudo chattr +i /etc/resolv.conf # setting immutable
 
 ```bash
 sudo pacman -Syyu # force fetch
-sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi neofetch util-linux tree bat lf
+sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi neofetch util-linux tree bat lf fzf
 ```
 
 ### Shell Setup
@@ -23,13 +23,13 @@ sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl
 
 ```bash
 # Installing zsh and some fonts
-sudo pacman -S zsh powerline-fonts
+sudo pacman -S zsh powerline-fonts fzf zoxide
 # changinf default shell to zsh, you can also do it with sudo to make zsh default for root
 # restart to make changes take effect
 chsh -s $(which zsh)
 
-# Installing ohmyzsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# install oh-my-posh using paru, this should chaotic aur by default
+paru -S oh-my-posh
 ```
 
 #### Using zodide instead of cd
@@ -49,18 +49,6 @@ sudo pacman -S fzf
 # also to launch interactive shell, start typing the path part press space followed by TAB
 # This should bring up a filtered interactive window
 ```
-
-#### atuin for better history
-
-```bash
-# installation
-curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
-```
-
-Add `eval "$(atuin init zsh)"` at the end of `~/.zshrc`
-
-To delete command history use `atuin search --delete-it-all`
-To delete specific entries(prefixes) `atuin search --delete --search-mode prefix psql`
 
 ### Using Stow for dotfile management
 

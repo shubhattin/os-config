@@ -7,6 +7,7 @@
   - Would recommend to setup the linux-lts kernel later on after installation.
   - You would need to setup the breeze theme for sddm and custom background for sddm.
   - Background for Lock Screen is also configured seperately in _Screen Locking_ in Settings.
+  - install `yad` if `eos-welcome` does not works
 - To install with windows as dual boot ensure these things
   - Choose Manual Partitioning
   - `/boot/efi` -> type `fat32`, `reformated`
@@ -53,14 +54,12 @@
       - `prime-run glxinfo | grep 'OpenGL renderer'` checking opengl renderer
   - Check nvidia kernel module version `modinfo -F version nvidia`
   - [ ] Try to run tensorflow with nvidia gpu in both dual gpu and single gpu devices
-  - **[EnvyControl](https://github.com/bayasdev/envycontrol)**
-    - This is a better gpu mode setter than optmimus manager and supoorts all major distros. It also seems to have wayland support.
-    - `paru -S envycontrol` and follow this add a plugin in taskbar [Optimus GPU Switcher](https://github.com/enielrodriguez/optimus-gpu-switcher)
-  - Optimus Manager for X11
+  - **Optimus Manager for X11**
     - `paru -S optimus-manager-git optimus-manager-qt`
     - `sudo systemctl enable optimus-manager` after restart
     - Set AutoStart by launching Optimus manager qt and settings autostart.
     - You should use `Hybrid Mode` by default. And untill not required do not switch to Nvidia and prefer using `prime-run` as it saves power.
+    - You could also try [envycontrol](https://github.com/bayasdev/envycontrol) if this does not seem to work fine. It supports other distros and possibly wayland. _Although in my case the Display Manager did'nt open after switching modes, So stick with optimus manager untill required_
   - [x] Use **[Mission Center](https://aur.archlinux.org/packages/mission-center)** or **[Resources](https://aur.archlinux.org/packages/resources)** to verify and see GPU Usage as it lists all major hardware resources. `paru -S mission-center resources`
   - For CUDA and cuDNN `sudo pacman -S cuda cudnn`
   - **Testing GPU** : Install glmark2 `sudo pacman -S glmark2`
@@ -115,6 +114,14 @@ This shall fix the scaling issue as wayland is better at detecting scaling facto
 GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
 ```
 
+### Some Basic Usefull Info
+- **tty** : Stands for teletypewriter. Can be used to do execute commands which could cause problem on a live DE. It can also be used if things crash in a DE.
+  - In KDE Plasma the tty setup looks like this
+  - `tty1` reserved for arch startup and message it shows
+  - `tty2` hosts the DE
+  - `tty3-6` can be accessed using `ctrl+alt+3-6` (there are 1-7 there typically)
+  - use `chvt <num>` to change to a particular tty session
+
 ## Software
 
 - [x] **_CLI Based Application_** : These apps usually work all fine without ever having any major issues.
@@ -144,6 +151,7 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
   - Xtreme Download Manager currently using [`v8.0.29bete`](https://github.com/subhra74/xdm/releases/tag/8.0.29) `paru -S xdman-beta-bin`
     - To enable other file extensions like mp4 and mkv which are not marked for download by default can be enabled by going into `Settings > Browser Monitoring`, then find the list where it lists the extensions which will be automatically be taken over by xdm for download and add your desired extension if it already does not exists.
     - you might not be able to disable it from startup options in settings, you will need to use KDE's Autostart to disable it.
+    - _:information_source: you would need to create folders for download catergories like Videos, Programs, Documents, etc if in case it is not able to assemble after downnloading._
     - :warning: There seems to problem on using it in a wayland session
   - qBittorrent `sudo pacman -S qbittorrent`
   - [Percepolis Download Manager](https://persepolisdm.github.io/)
@@ -217,7 +225,7 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 - If a shortcut listed for your platform does not work then the DE might be interfering with it.
 - If a shortcut is not present for your platform try adding yourself.
 
-## Others
+### More
 
 - [ ] Test and use a Lightweight Windows Distribution in Linux on a VM. Avoid trying a major windows release as it would uselessly occupy space. Instead go for a patched lite version.
   - IDM :- This app on the VM as there no as good alternatives to IDM on Linux. Running this should not a problem ignoring `storage issues` on `VM`. storage issues relate to resizing the virtual disk before/after downloading files
@@ -227,7 +235,7 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
   - [Warpinator](https://warpinator.com/)
   - [Local Send](https://localsend.org/)
 
-## Shortcuts, Notes
+## Others
 
 - Shortcuts
   - [x] Lock Screen : `Win+L` to lock screen
@@ -239,8 +247,10 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
   - to install fonts locally copy it to `~/.local/share/fonts` folder. then `sudo fc-cache -f -v`
   - restart the computer to use the fonts properly in the terminal
 - To enable `24 Hour Time Format` you need to change time Format in Settngs > Region and Language.
-- To disable Auto Restore preopened apps before logout/shutdown/restart goto Settings > Session > Desktop Session. Select 'Start with an Empty Session` under 'On Login, Launch Apps that were open'. This causes some unexpected behaviour.
-- To show a indiacator around mouse while you press a hotkey(in my case `meta+ctrl+s`)
+- To disable **Auto Restore preopened apps** after logout/shutdown/restart goto Settings > Session > Desktop Session. Select 'Start with an Empty Session` under 'On Login, Launch Apps that were open'. This causes some unexpected behaviour.
+- To Disable **Audio Sound** and chaange **audio step** to 2
+  - Open Settings > Under Input & Output > Sound > Configure Volume Settings. Uncheck Audio Volume and change step size to `2`
+- To show a **indiacator around mouse** while you press a hotkey(in my case `meta+ctrl+s`)
  - Goto Settings > Windows Management > Desktop Effect
  - Then enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousThen enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousee
 

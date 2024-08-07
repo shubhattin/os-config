@@ -1,6 +1,8 @@
 
 ## **TouchPad Setup**
 
+> _These features currently are not by default enabled for wayland, we have to manually enable it. In future this is supposed to change and so the **steps below would be no longer needed then**_.
+
 Touchpad support is good in both `x11` and `wayland`. But you need to enbale `Invert Scroll Direction (Natural Scrolling)` for touchpad in `KDE Settings`
 To enable `Pinch Zoom In/Out` add flag `--enable-features=UseOzonePlatform --ozone-platform=wayland` in a wayland session. for eg :- for chrome and brave
 But this cause problems if you are in a x11 session. So rather prefix the app command with `run_ozone_wayland_flags`.
