@@ -14,7 +14,7 @@ sudo chattr +i /etc/resolv.conf # setting immutable
 
 ```bash
 sudo pacman -Syyu # force fetch
-sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi neofetch util-linux tree bat lf fzf
+sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf
 ```
 
 ### Shell Setup
@@ -73,6 +73,9 @@ git config --global core.safecrlf true
 
 # Github CLI
 sudo pacman -S github-cli
+
+# Note
+# git fetch --prune : clears orphan remote branches
 ```
 
 ### tmux
@@ -98,6 +101,9 @@ sudo pacman -S python python-pip python-pipx tk
 # pipx can be used to install cli apps in pip like black, but prefer direct pacman method
 # install common needed packages via pacman instead of pip or pipx
 sudo pacman -S python-rich python-requests python-poetry python-pipenv ipython python-black
+
+# Installing few useful packages on system level itself
+sudo pacman -S python-numpy python-scipy python-pandas python-openpyxl python-matplotlib python-pyyaml python-toml python-typer
 ```
 
 #### Never install using `sudo pip` or even `pipx` directly or else you would potentially break your system
@@ -219,6 +225,19 @@ LOCAL_BIN="$HOME/.local/bin" && mkdir -p "$LOCAL_BIN" && mv speedtest "$LOCAL_BI
 Uncomment `Color`, `CheckSpace`, `ILoveCandy` to enable coloured output, check for available space and modify the loading indicator of pacman respectively.
 Also uncomment `VerbosePkgLists` to have a detailed breakdown on package changes in form of a multiline list instead of a paragraph.
 Also set `ParallelDownloads = 5` to allow parallel downloads.
+
+#### Cache Management
+
+- Check cache size for pacman and paru `du -sh /var/cache/pacman/pkg ~/.cache/paru`
+- :warning: _This method is only mentioned for the sake of information. This should not be done in usual circumstances becuase cache is helpful to roll back packages to previous versions if something break_
+  - `sudo pacman -Sc` : clears all cache
+  - `sudo pacman -Scc` : clears all cache including that of the installed packages
+- Refer [video](https://youtu.be/wp3LfWwCrZE)
+- Install `paccache` via `sudo pacman -S pacman -contrib`
+- `d` in the arguments is for the dry run, you should remove it when finally doing it
+  - `paccache -dvk2` : to keep the last 2 versions in cache (`v` is for verbosw)
+  - `paccache -duvk1` : to kepp the latest version of uninstalled packages in cache.
+
 
 #### Updating `/etc/pacman.d/mirrorlist`
 

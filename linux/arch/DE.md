@@ -1,3 +1,4 @@
+<h1></h1>
 > **_This file is written with respect to Endeavour OS(Arch) in KDE Plasma Desktop_**
 
 ## OS Installation and Boot
@@ -216,6 +217,11 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
     > To Create keyboard shortcuts goto `Keyboard > Shortcuts`
 - Others Apps I use
   - Surfshark: `paru -S surfshark-client`
+- Virtual Machine Emulator : [Virt Manager](https://www.makeuseof.com/how-to-install-arch-linux-kvm-configure-virtual-machine/)
+  - `sudo pacman -S qemu-full virt-manager virt-viewer dnsmasq bridge-utils libguestfs ebtables vde2 openbsd-netcat`
+  - `sudo systemctl enable libvirtd.service` or `sudo systemctl start libvirtd.service`
+  - Add current user to libvirt group `sudo usermod -aG libvirt $USER`
+  - Start the network either `virsh net-start default` or `virsh net-autostart default`
 
 ### VS Code Keybindings Fix
 
@@ -234,6 +240,7 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 - [ ] **_File Transfer Apps_**
   - [Warpinator](https://warpinator.com/)
   - [Local Send](https://localsend.org/)
+- [ ] Explore the possibility of using WSL as a file access tool rather than paragon linux file system.
 
 ## Others
 
