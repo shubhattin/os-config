@@ -1,5 +1,4 @@
-<h1></h1>
-> **_This file is written with respect to Endeavour OS(Arch) in KDE Plasma Desktop_**
+**_This file is written with respect to Endeavour OS(Arch) in KDE Plasma Desktop_**
 
 ## OS Installation and Boot
 
