@@ -104,7 +104,7 @@ sudo pacman -S python python-pip python-pipx tk
 sudo pacman -S python-rich python-requests python-poetry python-pipenv ipython python-black
 
 # Installing few useful packages on system level itself
-sudo pacman -S python-numpy python-scipy python-pandas python-openpyxl python-matplotlib python-pyyaml python-toml python-typer python-pyquery
+sudo pacman -S python-numpy python-scipy python-pandas python-openpyxl python-matplotlib python-pyyaml python-toml python-typer python-pyquery python-jinja
 ```
 
 #### Never install using `sudo pip` or even `pipx` directly or else you would potentially break your system
