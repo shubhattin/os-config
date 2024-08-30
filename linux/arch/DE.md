@@ -72,6 +72,12 @@
   - Setup Lid Close and other such options in `Power Management`
   - _Sleep function might malfunctioning, insttalling gpu drivers and latest linux kernel fixed laptop overheating in my case_,
 - Currently using the [Dark Matter](https://github.com/VandalByte/darkmatter-grub2-theme/tree/main) theme for grub
+- **Fixing Issues mounting NTFS and other disks**
+  - `lsblk` to get identifier for your disk
+  - `sudo pacman -S exfat-utils exfatprogs ntfs-3g`
+  - `sudo fsck /dev/<path>` to check for errors
+  - `sudo mount -t ntfs-3g /dev/<path> /mnt` to mount forcefully as ntfs
+  - `sudo ntfsfix /dev/<path>` to fix common ntfs problems
 - > :information_source: While using a usb drive or any any external storage device wait for the usb to eject and disappear from file explorer. Its because if something shows to be copied, deleted, moved etc, it still might be processing things in background. This also the reason why commands like `rm -rf and cp` feel faster than windows copy and delete.
 
 #### Installing linux-lts kernel
