@@ -241,8 +241,8 @@ Also set `ParallelDownloads = 5` to allow parallel downloads.
 - Refer [video](https://youtu.be/wp3LfWwCrZE)
 - Install `paccache` via `sudo pacman -S pacman -contrib`
 - `d` in the arguments is for the dry run, you should remove it when finally doing it
-  - `paccache -dvk2` : to keep the last 2 versions in cache (`v` is for verbosw)
-  - `paccache -duvk1` : to kepp the latest version of uninstalled packages in cache.
+  - `paccache -dvk2` : to keep the last 2 versions in cache (`v` is for verbose)
+  - `paccache -duvk1` : to keep the latest version of uninstalled packages in cache.
 
 
 #### Updating `/etc/pacman.d/mirrorlist`

@@ -84,12 +84,13 @@
 
 - In EOS installtion if you did'nt chose linux-lts lts kernel you should get the latest kernels by default
 - `sudo pacman -S linux-firmware linux-lts linux-lts-headers`, you should keep linux-lts as a backup in case main kernel fails.
-- we dont need to do `sudo mkcpinitio -p linux-lts` as this auto handled by pacman. But you still need to reconfig grub with `sudo grub-mkconfig -o /boot/grub/grub.cfg`
+- we dont need to do `sudo mkinitcpio -p linux-lts` as this auto handled by pacman. But you still need to reconfig grub with `sudo grub-mkconfig -o /boot/grub/grub.cfg`
 - `uname -r` to get current linux kernel version being used
 - to install and setup linux-lts kernel follow [this](https://itsfoss.com/switch-kernels-arch-linux/) guide.
 - Any custom changes made to `/etc/default/grub` should be in end after `# Custom` line.
 - You should prefer linux latest kernel for improved hardware support for you laptop or same latest hardware. (in my case i faced problem with linux-lts in laptop)
-- If you are a current linux kernel version which you want to _lock_, then goto `/etc/pacman.conf` and uncomment the line `#IgnorePkg  = ` and add `linux` to end of it. this should prevent linux kernel updates.
+- If you are on a current linux kernel version which you want to _lock_, then goto `/etc/pacman.conf` and uncomment the line `#IgnorePkg  = ` and add `linux linux-headers` to end of it. this should prevent linux kernel updates.
+- Then to manually update the packages after ignoring `sudo pacman -Syu --needed linux linux-headers`
 
 Add this to end of `/etc/default/grub`
 
