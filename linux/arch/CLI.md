@@ -69,6 +69,7 @@ Use `stow --adopt .` to overwrite the files but in this method the dotfiles dire
 git config --global init.defaultBranch main # default branch name
 git config --global core.autocrlf input
 git config --global core.safecrlf true
+git config --global pull.rebase false
 # ^ We are setting the autocrlf to always to be '\n' instead of '\r\n'
 
 # Github CLI
