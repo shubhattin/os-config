@@ -246,6 +246,41 @@ def get_script(opt: InstallerOptions):
         add_pkgs(
             ["chaotic-aur/brave-bin chaotic-aur/microsoft-edge-stable-bin", "chromium"]
         )
+        # Download and Setup ozone wayland
+        commands.extend(
+            [
+                "curl https://raw.githubusercontent.com/shubhattin/dotfiles/refs/heads/main/others/.plasma_wayland_prefixer.conf -o /root/.plasma_wayland_prefixer.conf",
+                "curl https://raw.githubusercontent.com/shubhattin/os-config/refs/heads/main/linux/arch/touchpad/prefix_ozone_wayland -o /bin/prefix_ozone_wayland",
+                "curl https://raw.githubusercontent.com/shubhattin/os-config/refs/heads/main/linux/arch/touchpad/run_ozone_wayland_flags -o /bin/run_ozone_wayland_flags",
+                "chmod +x /bin/run_ozone_wayland_flags",
+                "chmod +x /bin/prefix_ozone_wayland",
+                "/bin/prefix_ozone_wayland",
+            ]
+        )
+        if not os.path.isfile("/etc/systemd/system/prefix_ozone_wayland.service"):
+            lines = [
+                "[Unit]",
+                "Description=Prefixed .desktop ozone wayland flag provider for zoom in/out support",
+                "After=network.target",
+                "",
+                "[Service]",
+                "Type=simple",
+                "ExecStart=/bin/prefix_ozone_wayland",
+                "User=root",
+                "Group=root",
+                "",
+                "[Install]",
+                "WantedBy=multi-user.target",
+            ]
+            commands.append(
+                f"""echo '{lines[0]}' > /etc/systemd/system/prefix_ozone_wayland.service"""
+            )
+            for line in lines[1:]:
+                commands.append(
+                    f"""echo '{line}' >> /etc/systemd/system/prefix_ozone_wayland.service"""
+                )
+        commands.append("sudo systemctl enable prefix_ozone_wayland.service")
+
         # Video and Multimedia
         add_pkgs(
             [
@@ -287,8 +322,7 @@ def get_script(opt: InstallerOptions):
             ]
         )
 
-        # Apps exclusive to AUR
-        commands.extend(["paru -S parabolic surfshark-client ibus-m17n"])
+        # Apps exclusive to AUR have to be executed separately with normal user privileges
 
     base_system_setup()
     setup_cli_tools()
@@ -308,14 +342,10 @@ def main(
     ),
     preview_script: bool = True,
 ):
-    if not os.path.isdir(LOG_PATH):
-        os.makedirs(LOG_PATH)
-    script_out_file = os.path.join(
-        LOG_PATH, f"{datetime.datetime.isoformat(datetime.datetime.now())}.sh"
-    )
-    # console.print(
-    #     "[yellow]Make sure you are superuser. use `[white bold]sudo su[/]`[/]"
-    # )
+    os.system("mkdir -p /tmp/arch_app_installer/{script,log}")
+    CURRENT_TIME_ISO = datetime.datetime.isoformat(datetime.datetime.now())
+    script_out_file = os.path.join(LOG_PATH, "script", f"{CURRENT_TIME_ISO}.sh")
+    log_out_file = os.path.join(LOG_PATH, "log", f"{CURRENT_TIME_ISO}.log")
     if not frac_scale:
         frac_scale = Prompt.ask("Enter Fractional Scaling factor", default=1)
     if not setup_google_dns:
@@ -345,6 +375,7 @@ def main(
         confirm = Confirm.ask("Do you want to execute the script ?")
         if confirm:
             os.system(f"sudo bash {script_out_file}")
+            os.system("paru -S parabolic surfshark-client ibus-m17n")
 
 
 if __name__ == "__main__":
