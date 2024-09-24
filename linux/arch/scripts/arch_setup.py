@@ -110,7 +110,7 @@ def get_script(opt: InstallerOptions):
 
         # Kernel Setup
         add_comment("Kernel Setup, both lts ans latest")
-        add_pkgs("linux linux-header linux-firmware linux-lts linux-lts-header")
+        add_pkgs("linux linux-headers linux-firmware linux-lts linux-lts-headers")
         grub_config_split = read_file("/etc/default/grub").split("\n# Custom\n")
         to_add_grub_settings = False
         to_check_for = (
