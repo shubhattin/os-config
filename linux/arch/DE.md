@@ -71,7 +71,7 @@
 - _Power Management_ : If you feel that your system is not utilizing space in optimal way you could use [tlp](https://askubuntu.com/questions/1309396/how-to-increase-battery-life-on-ubuntu-20-04-and-what-power-saving-software-shou) and remove it see [here](https://www.baeldung.com/linux/tlp-disable)
   - Setup Lid Close and other such options in `Power Management`
   - _Sleep function might malfunctioning, insttalling gpu drivers and latest linux kernel fixed laptop overheating in my case_,
-- Currently using the [Dark Matter](https://github.com/VandalByte/darkmatter-grub2-theme/tree/main) theme for grub
+- Currently using the [Dark Matter](https://github.com/VandalByte/darkmatter-grub2-theme/tree/main) theme for grub, also tried [grub2-themes](https://github.com/vinceliuice/grub2-themes)
 - **Fixing Issues mounting NTFS and other disks**
   - `lsblk` to get identifier for your disk
   - `sudo pacman -S exfat-utils exfatprogs ntfs-3g`
