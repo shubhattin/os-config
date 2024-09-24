@@ -190,7 +190,13 @@ def get_script(opt: InstallerOptions):
         # Nodejs using nvm
         add_comment("Nodejs using nvm")
         add_pkgs("chaotic-aur/nvm")
-        commands.append("nvm install 20")
+        commands.extend(
+            [
+                "source /usr/share/nvm/init-nvm.sh",
+                "nvm install 20",
+                "echo 'To use node,npm, add in .zshrc `source /usr/share/nvm/init-nvm.sh`'",
+            ]
+        )
 
         # Python and pip
         add_comment("Python and pip")
