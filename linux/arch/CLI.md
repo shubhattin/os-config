@@ -41,8 +41,10 @@ Add at end of .zshrc
 eval "$(zoxide init --cmd cd zsh)"
 # --cmd cd -> replaces the cd command. if you dont add this you could use it using `z`, So new commands would be cd and cdi
 ```
+
 Refer [this video](https://www.youtube.com/watch?v=aghxkpyRVDY).
 Install a fuzzy finder to use in `cdi` command
+
 ```bash
 sudo pacman -S fzf
 # use cdi as a fuzzy finder in zoxide db
@@ -56,6 +58,7 @@ Install using `sudo pacman -S stow`
 
 Run command in the directory you have stored your dotfiles(the filestructure should correspond to $HOME directory).
 You need to run this command after each change made to the dotfiles.
+
 ```bash
 stow .
 ```
@@ -69,8 +72,8 @@ Use `stow --adopt .` to overwrite the files but in this method the dotfiles dire
 git config --global init.defaultBranch main # default branch name
 git config --global core.autocrlf input
 git config --global core.safecrlf true
-git config --global pull.rebase false
 # ^ We are setting the autocrlf to always to be '\n' instead of '\r\n'
+git config --global pull.rebase false
 
 # Github CLI
 sudo pacman -S github-cli
@@ -95,8 +98,8 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 ```
 
 ### Python
+>
 > ⚠️ **Unless very essentail try to stick with the default python version that was preinstalled, as python is a system dependency so changing the version and not properly being able to install all the packages previous version had might result in errors**
-
 
 ```bash
 sudo pacman -S python python-pip python-pipx tk
@@ -184,6 +187,7 @@ sudo pacman -S go
 ### Rust
 
 For development purposes you should prefer the `rustup` method of installation istead of directly installing it as `sudo pacman -S rust`.
+
 ```bash
 sudo pacman -S rustup
 ```
@@ -195,7 +199,6 @@ URL="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tg
 cd /tmp && UUID=$(uuidgen) && mkdir "$UUID" && cd "$UUID" && wget "$URL" -O speedtest.tgz && tar -xzf speedtest.tgz
 LOCAL_BIN="$HOME/.local/bin" && mkdir -p "$LOCAL_BIN" && mv speedtest "$LOCAL_BIN/speedtest" && cd
 ```
-
 
 ### Basic Pacman Usage Syntax
 
@@ -245,7 +248,6 @@ Also set `ParallelDownloads = 5` to allow parallel downloads.
   - `paccache -dvk2` : to keep the last 2 versions in cache (`v` is for verbose)
   - `paccache -duvk1` : to keep the latest version of uninstalled packages in cache.
 
-
 #### Updating `/etc/pacman.d/mirrorlist`
 
 **_Upadte mirros necessarily to have a better speed for installing packages either manually or via EOS welcome_**
@@ -259,7 +261,6 @@ reflector --verbose -c IN -c SG --protocol https --sort age --latest 20 --downlo
 ```
 
 In Endeavour OS you use the Welcome app to update mirrors.
-
 
 ### Paru Installation and Usage
 
@@ -275,6 +276,7 @@ sudo pacman -S chaotic-aur/paru
 ```
 
 If you already have yay and wish to unistall it then do `sudo paru -Rns yay` and also prefer creating a prefix for paru.
+
 ```bash
 alias yay=paru
 ```
@@ -291,10 +293,10 @@ Paru apart from being a aur helper is also a wrapper around pacman.
 
 my [config file](https://github.com/shubhattin/dotfiles/blob/main/.config/paru/paru.conf). The constraints forced via a fie manager are like a necessity if you wish to have a safer and more stable experience using aur.
 
-
 ### Enable Chaotic AUR
 
 After `sudo su` enter these commands. Refer the [docs](https://aur.chaotic.cx/docs)
+
 ```bash
 pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 pacman-key --lsign-key 3056513887B78AEB
