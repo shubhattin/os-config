@@ -69,7 +69,7 @@ def get_script(opt: InstallerOptions):
         # Setting Up Pacman and Chaotic AUR
         add_comment("Setting Up Pacman and Chaotic AUR")
         commands.extend(
-            [
+            ,[
                 "pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com",
                 "pacman-key --lsign-key 3056513887B78AEB",
                 "pacman --noconfirm -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'",
@@ -143,7 +143,7 @@ def get_script(opt: InstallerOptions):
             # GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
             commands.extend(
                 [
-                    """echo "[General]" >> /etc/sddm.conf.d/hidpi.conf""",
+                    """echo "[General]" > /etc/sddm.conf.d/hidpi.conf""",
                     f"""echo "GreeterEnvironment=QT_SCREEN_SCALE_FACTORS={opt.frac_scale}" >> /etc/sddm.conf.d/hidpi.conf""",
                 ]
             )
