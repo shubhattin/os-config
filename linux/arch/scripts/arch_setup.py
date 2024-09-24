@@ -371,7 +371,7 @@ def main(
             frac_scale=frac_scale,
         )
     )
-    with open(script_out_file, "w") as f:
+    with open(script_out_file, "w", encoding="utf-8") as f:
         f.write(script_text)
 
     if preview_script:
