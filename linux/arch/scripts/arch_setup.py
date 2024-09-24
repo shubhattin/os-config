@@ -94,7 +94,7 @@ def get_script(opt: InstallerOptions):
             [
                 "base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf",
                 "chaotic-aur/paru",
-                "pacman-contrib",
+                "pacman-contrib mkinitcpio",
             ]
         )
 
@@ -167,6 +167,12 @@ def get_script(opt: InstallerOptions):
             add_comment("Nvidia Graphic Setup")
             add_pkgs(
                 "nvidia nvidia-lts nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime"
+            )
+            commands.extend(
+                [
+                    """sudo bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm-nomodeset.conf'""",
+                    "sudo mkinitcpio -P",
+                ]
             )
 
         if opt.gpu_type == "intel":

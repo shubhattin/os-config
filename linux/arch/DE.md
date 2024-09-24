@@ -45,8 +45,11 @@
   - **Intel GPU**
     - `sudo pacman -S intel-ucode mesa intel-media-driver libva-mesa-driver`
   - Follow Instruction [here](https://dev.to/vitorvargas/how-to-install-the-nvidia-driver-on-archlinux-5bgc)
-    - `sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime`
-    - also if using `linux-lts` then `sudo pacman -S nvidia-lts`
+    - `sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime nvidia-lts`
+    - DRM Kernel Mode Setting, refer [NVIDIA](https://wiki.archlinux.org/title/NVIDIA)
+      - `sudo bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm-nomodeset.conf'`
+      - `sudo mkinitcpio -P`
+      - Check if working by `sudo cat /sys/module/nvidia_drm/parameters/modeset`, it should output `Y` instead of `N`
     - Check if `nouveau` or the proprietary nvidia drivers are running
       - `lsmod | grep nouveau`
       - `lsmod | grep nvidia`
