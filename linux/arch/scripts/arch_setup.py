@@ -101,8 +101,11 @@ def get_script(opt: InstallerOptions):
         # Basic CLI Setup
         add_comment("Basic CLI Setup")
         add_pkgs("zsh powerline-fonts fzf zoxide stow chaotic-aur/oh-my-posh")
-        commands.append(
-            "chsh -s $(which zsh)"
+        commands.extend(
+            [
+                "chsh -s $(which zsh)",
+                "echo 'Also run `chsh -s $(which zsh)` as non root user as well'",
+            ]
         )  # this will only set for root user, so set for user manually later on
 
         # Kernel Setup
