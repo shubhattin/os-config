@@ -316,8 +316,8 @@ def get_script(opt: InstallerOptions):
         )
         add_pkgs(
             [
-                "libreoffice-fresh ibreoffice-extension-texmaths libreoffice-extension-writer2latex",
-                "hunspell hunspell-en_us hunspell-en_gb hunspell-hi ",
+                "libreoffice-fresh libreoffice-extension-texmaths libreoffice-extension-writer2latex",
+                "hunspell hunspell-en_us hunspell-en_gb",
             ]
         )
 
