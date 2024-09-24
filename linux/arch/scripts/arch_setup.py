@@ -139,8 +139,6 @@ def get_script(opt: InstallerOptions):
         # DPI scaling
         add_comment("DPI Scaling for sddm using X11")
         if opt.frac_scale > 1 and not os.path.isfile("/etc/sddm.conf.d/hidpi.conf"):
-            #     [General]
-            # GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
             commands.extend(
                 [
                     """echo "[General]" > /etc/sddm.conf.d/hidpi.conf""",
