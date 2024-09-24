@@ -4,6 +4,7 @@ import os
 import sys
 import datetime
 from typing import Literal
+import shutil
 
 try:
     import typer
@@ -71,8 +72,8 @@ def get_script(opt: InstallerOptions):
             [
                 "pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com",
                 "pacman-key --lsign-key 3056513887B78AEB",
-                "pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'",
-                "pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'",
+                "pacman --noconfirm -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'",
+                "pacman --noconfirm -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'",
             ]
         )
         commands.append(
@@ -286,6 +287,9 @@ def get_script(opt: InstallerOptions):
             ]
         )
 
+        # Apps exclusive to AUR
+        commands.extend(["paru -S parabolic surfshark-client ibus-m17n"])
+
     base_system_setup()
     setup_cli_tools()
     other_apps()
@@ -297,11 +301,12 @@ def get_script(opt: InstallerOptions):
 def main(
     cpu_type: str = None,
     gpu_type: str = None,
+    frac_scale: float = typer.Option(None, help="Screen Scale"),
+    setup_google_dns: bool = typer.Option(None, help="Setup Google DNS"),
     execute_script: bool = typer.Option(
         True, help="Execute the generated Installer script"
     ),
-    frac_scale: float = typer.Option(None, help="Screen Scale"),
-    setup_google_dns: bool = typer.Option(None, help="Setup Google DNS"),
+    preview_script: bool = True,
 ):
     if not os.path.isdir(LOG_PATH):
         os.makedirs(LOG_PATH)
@@ -320,17 +325,26 @@ def main(
     if not gpu_type:
         gpu_type = ask_choices("Enter GPU type", ["intel", "nvidia", "both"])
 
-    with open("a.sh", "w") as f:
-        f.write(
-            get_script(
-                InstallerOptions(
-                    cpu_type=cpu_type,
-                    gpu_type=gpu_type,
-                    setup_google_dns=setup_google_dns,
-                    frac_scale=frac_scale,
-                )
-            )
+    script_text = get_script(
+        InstallerOptions(
+            cpu_type=cpu_type,
+            gpu_type=gpu_type,
+            setup_google_dns=setup_google_dns,
+            frac_scale=frac_scale,
         )
+    )
+    with open(script_out_file, "w") as f:
+        f.write(script_text)
+
+    if preview_script:
+        is_bat_installed = shutil.which("bat") is not None
+        if not is_bat_installed:
+            os.system("sudo pacman --noconfirm -S bat")
+        os.system(f"bat {script_out_file}")
+    if execute_script:
+        confirm = Confirm.ask("Do you want to execute the script ?")
+        if confirm:
+            os.system(f"sudo bash {script_out_file}")
 
 
 if __name__ == "__main__":
