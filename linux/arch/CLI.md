@@ -14,7 +14,7 @@ sudo bash -c 'echo "nameserver 8.8.4.4" >> /etc/resolv.conf'
 
 ```bash
 sudo pacman -Syyu # force fetch
-sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf
+sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf pacman-contrib
 ```
 
 ### Shell Setup
@@ -243,7 +243,7 @@ Also set `ParallelDownloads = 5` to allow parallel downloads.
   - `sudo pacman -Sc` : clears all cache
   - `sudo pacman -Scc` : clears all cache including that of the installed packages
 - Refer [video](https://youtu.be/wp3LfWwCrZE)
-- Install `paccache` via `sudo pacman -S pacman -contrib`
+- Install `paccache` via `sudo pacman -S pacman-contrib`
 - `d` in the arguments is for the dry run, you should remove it when finally doing it
   - `paccache -dvk2` : to keep the last 2 versions in cache (`v` is for verbose)
   - `paccache -duvk1` : to keep the latest version of uninstalled packages in cache.

@@ -93,6 +93,7 @@ def get_script(opt: InstallerOptions):
             [
                 "base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf",
                 "chaotic-aur/paru",
+                "pacman-contrib",
             ]
         )
 
@@ -175,7 +176,7 @@ def get_script(opt: InstallerOptions):
             intel_graphic_setup()
             nvidia_graphic_setup()
 
-    def setup_cli_apps():
+    def setup_cli_tools():
         commands.append("\n\n## CLI Apps Setup ##\n")
         # git and Github CLI
         add_comment("git and Github CLI")
@@ -227,8 +228,67 @@ def get_script(opt: InstallerOptions):
         add_comment("Java")
         add_pkgs("jdk-openjdk")
 
+    def other_apps():
+        commands.append("\n\n## Other Apps Setup ##\n")
+        # Resource Monitoring and other basic system tools
+        add_pkgs(
+            [
+                "chaotic-aur/mission-center chaotic-aur/resources",
+                "partitionmanager gparted filelight",
+            ]
+        )
+        # Vscode
+        add_pkgs("chaotic-aur/visual-studio-code-bin")
+        # flatpak and discover center
+        add_pkgs("flatpak discover")
+        # Browsers
+        add_pkgs(
+            ["chaotic-aur/brave-bin chaotic-aur/microsoft-edge-stable-bin", "chromium"]
+        )
+        # Video and Multimedia
+        add_pkgs(
+            [
+                "vlc handbrake chaotic-aur/shutter-encoder-bin",
+                "chaotic-aur/simplescreenrecorder",  # works only in X11
+            ]
+        )
+        # Image and Video Editing
+        add_pkgs("gimp kdenlive ffmpeg")
+        # Virtualization
+        add_pkgs(
+            "qemu-full virt-manager virt-viewer dnsmasq bridge-utils libguestfs ebtables vde2 openbsd-netcat"
+        )
+        commands.extend(
+            [
+                "systemctl start libvirtd.service",
+                "systemctl enable libvirtd.service",
+                "echo 'Add you current user to libvirt group using `sudo usermod -aG libvirt $USER`'",
+                "virsh net-autostart default",
+            ]
+        )
+        # Libre Office
+        add_pkgs(
+            "ttf-caladea ttf-carlito ttf-dejavu ttf-liberation ttf-linux-libertine-g noto-fonts adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts"
+        )
+        add_pkgs(
+            [
+                "libreoffice-fresh ibreoffice-extension-texmaths libreoffice-extension-writer2latex",
+                "hunspell hunspell-en_us hunspell-en_gb hunspell-hi ",
+            ]
+        )
+
+        # Other Utilities
+        add_pkgs(
+            [
+                "chaotic-aur/xdman-beta-bin qbittorrent chaotic-aur/video-downloader",
+                "chaotic-aur/zoom chaotic-aur/safeeyes",
+                "pdfarranger chaotic-aur/peazip ibus",
+            ]
+        )
+
     base_system_setup()
-    setup_cli_apps()
+    setup_cli_tools()
+    other_apps()
 
     return "\n".join(commands)
 
