@@ -141,7 +141,7 @@ def get_script(opt: InstallerOptions):
         if opt.frac_scale > 1 and not os.path.isfile("/etc/sddm.conf.d/hidpi.conf"):
             commands.extend(
                 [
-                    """echo "[General]" > /etc/sddm.conf.d/hidpi.conf""",
+                    """echo "[General]" >> /etc/sddm.conf.d/hidpi.conf""",
                     f"""echo "GreeterEnvironment=QT_SCREEN_SCALE_FACTORS={opt.frac_scale}" >> /etc/sddm.conf.d/hidpi.conf""",
                 ]
             )
