@@ -161,14 +161,12 @@ def get_script(opt: InstallerOptions):
 
         def intel_graphic_setup():
             add_comment("Intel Graphic Setup")
-            add_pkgs(
-                "xf86-video-intel vulkan-intel mesa intel-media-driver libva-mesa-driver"
-            )
+            add_pkgs("mesa intel-media-driver libva-mesa-driver")
 
         def nvidia_graphic_setup():
             add_comment("Nvidia Graphic Setup")
             add_pkgs(
-                "nvidia nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime"
+                "nvidia nvidia-lts nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime"
             )
 
         if opt.gpu_type == "intel":
