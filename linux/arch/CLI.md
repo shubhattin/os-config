@@ -92,8 +92,8 @@ sudo pacman -S tmux
 ### NVM(Node Version Manager)
 
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-# Install the nvm version you prefer
+paru nvm
+# Install the nodejs version you prefer
 # like nvm install 20.9
 ```
 

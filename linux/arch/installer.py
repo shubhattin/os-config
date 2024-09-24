@@ -90,7 +90,10 @@ def get_script(opt: InstallerOptions):
         add_comment("Update System and install base packages")
         commands.append("pacman --noconfirm -Syyu")
         add_pkgs(
-            "base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf"
+            [
+                "base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf",
+                "chaotic-aur/paru",
+            ]
         )
 
         # Basic CLI Setup
@@ -172,7 +175,61 @@ def get_script(opt: InstallerOptions):
             intel_graphic_setup()
             nvidia_graphic_setup()
 
+    def setup_cli_apps():
+        commands.append("\n\n## CLI Apps Setup ##\n")
+        # git and Github CLI
+        add_comment("git and Github CLI")
+        add_pkgs("git github-cli")
+        # we are not setting up .gitconfig settings here
+
+        # Nodejs using nvm
+        add_comment("Nodejs using nvm")
+        add_pkgs("chaotic-aur/nvm")
+        commands.append("nvm install 20")
+
+        # Python and pip
+        add_comment("Python and pip")
+        add_pkgs("python python-pip python-pipx tk")
+        add_pkgs(
+            "python-rich python-requests python-poetry python-pipenv ipython python-black"
+        )
+        add_pkgs(
+            "python-numpy python-scipy python-pandas python-openpyxl python-matplotlib python-pyyaml python-toml python-typer python-pyquery python-jinja python-watchdog"
+        )
+
+        # Lua, tmux and neovim
+        add_comment("tmux, lua and neovim")
+        add_pkgs("tmux lua luarocks neovim ripgrep lazygit")
+        add_pkgs("xclip wl-clipboard")
+
+        # Speedtest-cli
+        add_comment("Speedtest-cli")
+        commands.extend(
+            [
+                """URL="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz" """,
+                """cd /tmp && UUID=$(uuidgen) && mkdir "$UUID" && cd "$UUID" && wget "$URL" -O speedtest.tgz && tar -xzf speedtest.tgz""",
+                """LOCAL_BIN="$HOME/.local/bin" && mkdir -p "$LOCAL_BIN" && mv speedtest "$LOCAL_BIN/speedtest" && cd""",
+            ]
+        )
+
+        # rust and go and psql
+        add_comment("Rust, Go, Postgres")
+        add_pkgs("rustup go postgresql")
+        commands.append("echo 'use stable toolchain via `rustup default stable`'")
+        commands.append("sudo -u postgres initdb -D /var/lib/postgres/data")
+        commands.append("systemctl enable postgresql")
+        commands.append("systemctl start postgresql")
+        commands.append(
+            "echo 'You have to setup password for postgres user using `sudo -u postgres psql`'"
+        )
+
+        # Java
+        add_comment("Java")
+        add_pkgs("jdk-openjdk")
+
     base_system_setup()
+    setup_cli_apps()
+
     return "\n".join(commands)
 
 
