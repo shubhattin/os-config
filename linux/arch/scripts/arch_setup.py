@@ -58,11 +58,13 @@ def get_script(opt: InstallerOptions):
         if opt.setup_google_dns:
             commads = [
                 "# Setup Google DNS",
+                """chattr -i /etc/resolv.conf""",
                 """rm /etc/resolv.conf""",
                 """bash -c 'echo "nameserver 2001:4860:4860::8888" >> /etc/resolv.conf'""",
                 """bash -c 'echo "nameserver 2001:4860:4860::8844" >> /etc/resolv.conf'""",
                 """bash -c 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf'""",
                 """bash -c 'echo "nameserver 8.8.8.4" >> /etc/resolv.conf'""",
+                """chattr +i /etc/resolv.conf""",
             ]
             commands.extend(commads)
 
