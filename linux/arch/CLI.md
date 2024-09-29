@@ -16,6 +16,7 @@ sudo chattr +i /etc/resolv.conf
 ```bash
 sudo pacman -Syyu # force fetch
 sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf pacman-contrib mkinitcpio
+sudo pacman -S brightnessctl
 ```
 
 ### Shell Setup

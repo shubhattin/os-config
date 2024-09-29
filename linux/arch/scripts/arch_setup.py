@@ -97,6 +97,7 @@ def get_script(opt: InstallerOptions):
                 "base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf",
                 "chaotic-aur/paru",
                 "pacman-contrib mkinitcpio",
+                "brightnessctl",
             ]
         )
 
