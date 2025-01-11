@@ -107,7 +107,7 @@ paru nvm
 sudo pacman -S python python-pip python-pipx tk
 # pipx can be used to install cli apps in pip like black, but prefer direct pacman method
 # install common needed packages via pacman instead of pip or pipx
-sudo pacman -S python-rich python-requests python-poetry python-pipenv ipython python-black
+sudo pacman -S python-rich python-requests python-poetry python-pipenv ipython python-black python-uv
 
 # Installing few useful packages on system level itself
 sudo pacman -S python-numpy python-scipy python-pandas python-openpyxl python-matplotlib python-pyyaml python-toml python-typer python-pyquery python-jinja python-watchdog

@@ -209,7 +209,7 @@ def get_script(opt: InstallerOptions):
         add_comment("Python and pip")
         add_pkgs("python python-pip python-pipx tk")
         add_pkgs(
-            "python-rich python-requests python-poetry python-pipenv ipython python-black"
+            "python-rich python-requests python-poetry python-pipenv ipython python-black python-uv"
         )
         add_pkgs(
             "python-numpy python-scipy python-pandas python-openpyxl python-matplotlib python-pyyaml python-toml python-typer python-pyquery python-jinja python-watchdog"
