@@ -189,7 +189,7 @@ def get_script(opt: InstallerOptions):
 
     def setup_cli_tools():
         commands.append("\n\n## CLI Apps Setup ##\n")
-        add_pkgs("ghostty brightnessctl")
+        add_pkgs("ghostty brightnessctl gparted partitionmanager")
         # git and Github CLI
         add_comment("git and Github CLI")
         add_pkgs("git github-cli")
