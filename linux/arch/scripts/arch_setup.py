@@ -189,6 +189,7 @@ def get_script(opt: InstallerOptions):
 
     def setup_cli_tools():
         commands.append("\n\n## CLI Apps Setup ##\n")
+        add_pkgs("ghostty brightnessctl")
         # git and Github CLI
         add_comment("git and Github CLI")
         add_pkgs("git github-cli")
@@ -250,7 +251,7 @@ def get_script(opt: InstallerOptions):
         # Resource Monitoring and other basic system tools
         add_pkgs(
             [
-                "chaotic-aur/mission-center chaotic-aur/resources",
+                "mission-center resources",
                 "partitionmanager gparted filelight",
             ]
         )

@@ -27,6 +27,7 @@
   - [ ] find if we can use this even when our `/home` or `/` are encrypted.
 
 ## Basic Setup
+
 - Connectivity
   - [x] Bluetooth : In [EOS](https://endeavouros.com/) you would need to `sudo systemctl enable bluetooth`
   - [x] WiFi
@@ -37,9 +38,9 @@
 - [x] Time and Date
 - [TouchPad Zoom In/Out Gestures](./touchpad/touchpad.md)
 - If touchpad settings dont show up in KDE settingss use `kcmshell6 kcm_touchpad`
--  **Dual Monitor Support**
-  - [x] Fractional Scaling works both in x11 as well as wayland sessions
-  - [ ] Not able to set fractional scaling to 100% while external monitor is connected and restore it to 125%. It works but not with proper scaling support as expected.
+- **Dual Monitor Support**
+- [x] Fractional Scaling works both in x11 as well as wayland sessions
+- [ ] Not able to set fractional scaling to 100% while external monitor is connected and restore it to 125%. It works but not with proper scaling support as expected.
 - **GPU Setup**
   - list GPUs `lspci -vnn | grep VGA`
   - **Intel GPU**
@@ -92,7 +93,7 @@
 - to install and setup linux-lts kernel follow [this](https://itsfoss.com/switch-kernels-arch-linux/) guide.
 - Any custom changes made to `/etc/default/grub` should be in end after `# Custom` line.
 - You should prefer linux latest kernel for improved hardware support for you laptop or same latest hardware. (in my case i faced problem with linux-lts in laptop)
-- If you are on a current linux kernel version which you want to _lock_, then goto `/etc/pacman.conf` and uncomment the line `#IgnorePkg  = ` and add `linux linux-headers` to end of it. this should prevent linux kernel updates.
+- If you are on a current linux kernel version which you want to _lock_, then goto `/etc/pacman.conf` and uncomment the line `#IgnorePkg  =` and add `linux linux-headers` to end of it. this should prevent linux kernel updates.
 - Then to manually update the packages after ignoring `sudo pacman -Syu --needed linux linux-headers`
 
 Add this to end of `/etc/default/grub`
@@ -125,6 +126,7 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
 ```
 
 ### Some Basic Usefull Info
+
 - **tty** : Stands for teletypewriter. Can be used to do execute commands which could cause problem on a live DE. It can also be used if things crash in a DE.
   - In KDE Plasma the tty setup looks like this
   - `tty1` reserved for arch startup and message it shows
@@ -134,6 +136,7 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
 
 ## Software
 
+- `sudo pacman -S mission-center resources`
 - [x] **_CLI Based Application_** : These apps usually work all fine without ever having any major issues.
   - [x] Terminal Emulator
     - `Konsole` : Built in KDE terminal. Also enable proper `brahmic` script rendering in `Appearence > Complex Text Layout`
@@ -267,8 +270,8 @@ Initially refer to [Windows](https://code.visualstudio.com/shortcuts/keyboard-sh
 - To Disable **Audio Sound** and chaange **audio step** to 2
   - Open Settings > Under Input & Output > Sound > Configure Volume Settings. Uncheck Audio Volume and change step size to `2`
 - To show a **indiacator around mouse** while you press a hotkey(in my case `meta+ctrl+s`)
- - Goto Settings > Windows Management > Desktop Effect
- - Then enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousThen enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousee
+- Goto Settings > Windows Management > Desktop Effect
+- Then enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousThen enale track mouse and set a shortcut with required modifier keys to `show/hide` a indicator around mousee
 
 ## Backup Instructions for `/home` directory
 
@@ -317,4 +320,3 @@ After successful restore also set ownership if it had gone wrong
 ```bash
 sudo chown -R <new_username>:<new_username> /home/<new_username>
 ```
-

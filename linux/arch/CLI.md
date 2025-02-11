@@ -17,6 +17,8 @@ sudo chattr +i /etc/resolv.conf
 sudo pacman -Syyu # force fetch
 sudo pacman -S base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf pacman-contrib mkinitcpio
 sudo pacman -S brightnessctl
+# brightnessctl set +2%
+# brightnessctl set 5%-
 ```
 
 ### Shell Setup
@@ -25,7 +27,7 @@ sudo pacman -S brightnessctl
 
 ```bash
 # Installing zsh and some fonts
-sudo pacman -S zsh powerline-fonts fzf zoxide
+sudo pacman -S zsh powerline-fonts fzf zoxide ghostty
 # changinf default shell to zsh, you can also do it with sudo to make zsh default for root
 # restart to make changes take effect
 chsh -s $(which zsh)
