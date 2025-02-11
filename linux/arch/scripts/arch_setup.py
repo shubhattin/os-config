@@ -392,7 +392,7 @@ def main(
         confirm = Confirm.ask("Do you want to execute the script ?")
         if confirm:
             os.system(f"sudo bash {script_out_file}")
-            os.system("paru -S parabolic surfshark-client ibus-m17n")
+            os.system("paru -S surfshark-client ibus-m17n")
 
 
 if __name__ == "__main__":
