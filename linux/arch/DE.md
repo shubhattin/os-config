@@ -152,6 +152,7 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
   - [x] Brave `paru -S brave-bin`
   - [x] Edge `flatpak install flathub com.microsoft.Edge` or `paru -S microsoft-edge-stable-bin`
   - [x] Chrome
+  - [x] Zen `paru -S zen-browser-bin`
 - Video Player
   - [x] VLC Media Player `sudo pacman -S vlc`
 - Partition Manager : Built in KDE Partition Manager `sudo pacman -S partitionmanager gparted`
@@ -171,7 +172,7 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
   - Kget
   - Ktorrent
 - YouTube Video Downloader
-  - [Parabolic](https://github.com/NickvisionApps/Parabolic) `paru -S parabolic`
+  - [Parabolic](https://github.com/NickvisionApps/Parabolic) `paru -S parabolic` or at [https://flathub.org/apps/org.nickvision.tubeconverter](Flathub)
   - Video Downloader via `flatpak install flathub com.github.unrud.VideoDownloader` or `paru -S video-downloader`
   - Tube2go via `flatpak install flathub com.warlordsoftwares.tube2go`
 - [x] A Speed Monitor tool like DU Meter

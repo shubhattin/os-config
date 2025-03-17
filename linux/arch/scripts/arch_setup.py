@@ -193,6 +193,7 @@ def get_script(opt: InstallerOptions):
         # git and Github CLI
         add_comment("git and Github CLI")
         add_pkgs("git github-cli")
+        commands.extend(["gh extension install github/gh-copilot"])
         # we are not setting up .gitconfig settings here
 
         # Nodejs using nvm
@@ -261,7 +262,10 @@ def get_script(opt: InstallerOptions):
         add_pkgs("flatpak discover")
         # Browsers
         add_pkgs(
-            ["chaotic-aur/brave-bin chaotic-aur/microsoft-edge-stable-bin", "chromium"]
+            [
+                "chaotic-aur/brave-bin chaotic-aur/microsoft-edge-stable-bin chaotic-aur/zen-browser-bin",
+                "chromium",
+            ]
         )
         # Download and Setup ozone wayland
         commands.extend(
