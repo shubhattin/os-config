@@ -339,7 +339,8 @@ def get_script(opt: InstallerOptions):
             [
                 "chaotic-aur/xdman-beta-bin qbittorrent chaotic-aur/video-downloader",
                 "chaotic-aur/zoom chaotic-aur/safeeyes",
-                "pdfarranger chaotic-aur/peazip ibus",
+                "pdfarranger chaotic-aur/peazip",
+                "fcitx5 fcitx5-m17n fcitx5-configtool",
             ]
         )
 
@@ -396,7 +397,7 @@ def main(
         confirm = Confirm.ask("Do you want to execute the script ?")
         if confirm:
             os.system(f"sudo bash {script_out_file}")
-            os.system("paru -S surfshark-client ibus-m17n")
+            os.system("paru -S surfshark-client")
 
 
 if __name__ == "__main__":

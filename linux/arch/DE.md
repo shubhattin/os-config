@@ -211,17 +211,9 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
     - Goto `Keyboard > Layouts` and then add the language or layout you need, for eg: Hindi -> Hindi(Wx) and set a display text.
     - Default shortcut to change keyboard layout is `Meta+Alt+K`
   - **Input Method Editor**
-    - `sudo pacman -S ibus` && `paru -S ibus-m17n` && restart
-    - The above keyboard layout method can also be used in this approach as it has both keyboard layout and IME's
-    - On wayland session open Keyboard > Virtual Keyboard and set select IBus Wayland and apply.
-    - Search for Input Method Selector and set preferences of ibus.
-    - Open Ibus Preferences, select input method and now you should be able to add both layouts and IMEs.
-    - Restart the computer to ensure proper functioning
-    - Default Shortcut to change layout is `Super+space` you could change it to `Super+Alt+space` from preferences
-    - :warning: does not works on few apps on a wayland session
+    - `sudo pacman -S fcitx5 fcitx5-m17n fcitx5-configtool`
   - > Keyboard Layout Access Scheme :- **Left Bottom : `no shift` | Left Top : `Shift` || Right Bottom : `RightAlt` | Right Top : `RightAlt+Shift`**
   - You can see keyboard layout either directly from taskbar if available(like for Hindi Wx) or goto `ibus Preferences > Input method > Select the Layout > About`
-  - _Recommendation : Use the first Approach described unless necessary_
 - Screen Recorder
   - KDE's Built in Screen Recorder
   - [Simple Screen Recorder](https://github.com/MaartenBaert/ssr)
