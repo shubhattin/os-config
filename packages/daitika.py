@@ -42,7 +42,7 @@ def up(
         # VCP code 0x10 (Brightness                    ): current value =    xx, max value =   yyy
         current = int(data.split(":")[1].split(",")[0].split("=")[1].strip())
         max_value = int(data.split(":")[1].split(",")[1].split("=")[1].strip())
-        new_brightness = current + int(perc / 100.0 * max_value)
+        new_brightness = max(current + int(perc / 100.0 * max_value), max_value)
         sh.cmd(f"ddcutil setvcp {external_no} {new_brightness}", display=False)
 
 
@@ -62,7 +62,7 @@ def down(
         # VCP code 0x10 (Brightness                    ): current value =    xx, max value =   yyy
         current = int(data.split(":")[1].split(",")[0].split("=")[1].strip())
         max_value = int(data.split(":")[1].split(",")[1].split("=")[1].strip())
-        new_brightness = current - int(perc / 100.0 * max_value)
+        new_brightness = min(current - int(perc / 100.0 * max_value), 2)
         sh.cmd(f"ddcutil setvcp {external_no} {new_brightness}", display=False)
 
 
