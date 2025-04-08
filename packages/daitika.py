@@ -68,3 +68,4 @@ def down(
 
 if __name__ == "__main__":
     app()
+    # Prefix with `~/local/bin/` while registering shortcut in KDE
