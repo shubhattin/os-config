@@ -62,7 +62,11 @@ def down(
         # VCP code 0x10 (Brightness                    ): current value =    xx, max value =   yyy
         current = int(data.split(":")[1].split(",")[0].split("=")[1].strip())
         max_value = int(data.split(":")[1].split(",")[1].split("=")[1].strip())
-        new_brightness = max(current - int(perc / 100.0 * max_value), 2)
+        min_value_possible = os.environ.get("MIN_EXTERNAL_BRIGHTNESS")
+        new_brightness = max(
+            current - int(perc / 100.0 * max_value),
+            int(min_value_possible) if min_value_possible else 0,
+        )
         sh.cmd(f"ddcutil setvcp {external_no} {new_brightness}", display=False)
 
 
