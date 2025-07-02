@@ -315,4 +315,10 @@ Add the line to `/etc/pacman.conf` if not already added
 Include = /etc/pacman.d/chaotic-mirrorlist
 ```
 
+**Fixing Key Signature error**
+```bash
+sudo pacman -S chaotic-keyring
+sudo pacman-key --refresh-keys
+```
+
 > **You Don't Need to Manually change `paru -S pkg` commands to `sudo pacman -S chaotic-aur/pkg` as paru automatically prefers chaotic-aur over aur**
