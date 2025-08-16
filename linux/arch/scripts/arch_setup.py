@@ -12,7 +12,9 @@ try:
     from rich.prompt import Confirm, Prompt
     from pydantic.dataclasses import dataclass
 except ImportError:
-    os.system("sudo pacman --noconfirm -S python-typer python-rich python-pydantic")
+    os.system(
+        "sudo pacman --noconfirm -S python-typer python-rich python-pydantic neovim"
+    )
     sys.exit(-1)
 
 app = typer.Typer()
@@ -392,7 +394,7 @@ def main(
         is_bat_installed = shutil.which("bat") is not None
         if not is_bat_installed:
             os.system("sudo pacman --noconfirm -S bat")
-        os.system(f"bat {script_out_file}")
+        os.system(f"nvim {script_out_file}")
     if execute_script:
         confirm = Confirm.ask("Do you want to execute the script ?")
         if confirm:
