@@ -3,23 +3,23 @@
 # Includes Important Packages to be installed for current hyprland setup
 
 # Basic Apps
-pacman -S vi vim bat git cat paru --noconfirm
+pacman -S vi vim bat git paru --noconfirm --needed
 # ^ paru is there in eos packages
 
 ## Hyprland tools
-pacman -S hyprshot hypridle hyprlock hyprpaper --noconfirm
-pacman -S swaync waybar dolphin swayosd --noconfirm
+pacman -S hyprshot hypridle hyprlock hyprpaper --noconfirm --needed
+pacman -S swaync waybar dolphin swayosd --noconfirm --needed
 # Fonts
-pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm
+pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
-pacman -S bluez bluez-utils blueman --noconfirm
-pacman -S network-manager-applet --noconfirm
+pacman -S bluez bluez-utils blueman --noconfirm --needed
+pacman -S network-manager-applet --noconfirm --needed
 
 # Breeze and GTk Themes
-pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm
-pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm
-pacman -S adwaita-icon-theme gnome-themes-extra gtk3 gtk4 --noconfirm
-pacman -S xdg-desktop-portal-gtk xdg-desktop-portal-hyprland --noconfirm
+pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm --needed
+pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm --needed
+pacman -S adwaita-icon-theme gnome-themes-extra gtk3 gtk4 --noconfirm --needed
+pacman -S xdg-desktop-portal-gtk xdg-desktop-portal-hyprland --noconfirm --needed
 
 # Fonts
 pacman -S \
@@ -28,17 +28,17 @@ pacman -S \
   ttf-firacode-nerd \
   ttf-hack-nerd \
   ttf-inconsolata-nerd \
-  ttf-inconsolata-lgc-nerd --noconfirm
-pacman -S noto-fonts noto-fonts-extra --noconfirm
+  ttf-inconsolata-lgc-nerd --noconfirm --needed
+pacman -S noto-fonts noto-fonts-extra --noconfirm --needed
 
 # Other KDE Apps
-pacman -S partitionmanager okular haruna ark gwenview --noconfirm
+pacman -S partitionmanager okular haruna ark gwenview --noconfirm --needed
 
 # Gnome/Gtk App
-pacman -S gnome-calendar font-manager --noconfirm
+pacman -S gnome-calendar font-manager --noconfirm --needed
 
 # Clipboard
-pacman -S copyq wl-clipboard --noconfirm
+pacman -S copyq wl-clipboard --noconfirm --needed
 
 ## SDDM Theme and Background
 # Use
