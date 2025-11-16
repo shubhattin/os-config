@@ -8,7 +8,7 @@ pacman -S vi vim bat git paru --noconfirm --needed
 
 ## Hyprland tools
 pacman -S hyprshot hypridle hyprlock hyprpaper --noconfirm --needed
-pacman -S swaync waybar dolphin swayosd --noconfirm --needed
+pacman -S swaync waybar wofi dolphin swayosd --noconfirm --needed
 # Fonts
 pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
