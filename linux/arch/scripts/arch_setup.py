@@ -269,40 +269,6 @@ def get_script(opt: InstallerOptions):
                 "chromium",
             ]
         )
-        # Download and Setup ozone wayland
-        commands.extend(
-            [
-                "curl https://raw.githubusercontent.com/shubhattin/dotfiles/refs/heads/main/others/.plasma_wayland_prefixer.conf -o /root/.plasma_wayland_prefixer.conf",
-                "curl https://raw.githubusercontent.com/shubhattin/os-config/refs/heads/main/linux/arch/touchpad/prefix_ozone_wayland -o /bin/prefix_ozone_wayland",
-                "curl https://raw.githubusercontent.com/shubhattin/os-config/refs/heads/main/linux/arch/touchpad/run_ozone_wayland_flags -o /bin/run_ozone_wayland_flags",
-                "chmod +x /bin/run_ozone_wayland_flags",
-                "chmod +x /bin/prefix_ozone_wayland",
-                "/bin/prefix_ozone_wayland",
-            ]
-        )
-        if not os.path.isfile("/etc/systemd/system/prefix_ozone_wayland.service"):
-            lines = [
-                "[Unit]",
-                "Description=Prefixed .desktop ozone wayland flag provider for zoom in/out support",
-                "After=network.target",
-                "",
-                "[Service]",
-                "Type=simple",
-                "ExecStart=/bin/prefix_ozone_wayland",
-                "User=root",
-                "Group=root",
-                "",
-                "[Install]",
-                "WantedBy=multi-user.target",
-            ]
-            commands.append(
-                f"""echo '{lines[0]}' > /etc/systemd/system/prefix_ozone_wayland.service"""
-            )
-            for line in lines[1:]:
-                commands.append(
-                    f"""echo '{line}' >> /etc/systemd/system/prefix_ozone_wayland.service"""
-                )
-        commands.append("sudo systemctl enable prefix_ozone_wayland.service")
 
         # Video and Multimedia
         add_pkgs(
