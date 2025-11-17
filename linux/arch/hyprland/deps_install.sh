@@ -19,7 +19,7 @@ pacman -S network-manager-applet --noconfirm --needed
 pacman -S qt6ct breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
 pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm --needed
 pacman -S adwaita-icon-theme gnome-themes-extra gtk3 gtk4 --noconfirm --needed
-pacman -S xdg-desktop-portal-gtk xdg-desktop-portal-hyprland --noconfirm --needed
+pacman -S xdg-desktop-portal-gtk xdg-desktop-portal-hyprland xdg-desktop-portal-kde --noconfirm --needed
 
 # Fonts
 pacman -S \
