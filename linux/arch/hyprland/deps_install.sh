@@ -8,7 +8,9 @@ pacman -S vi vim bat git paru ddcutil --noconfirm --needed
 
 ## Hyprland tools
 pacman -S hyprshot hypridle hyprlock hyprpaper --noconfirm --needed
-pacman -S swaync waybar wofi dolphin swayosd --noconfirm --needed
+pacman -S swaync waybar wofi dolphin archlinux-xdg-menu swayosd --noconfirm --needed
+pacman -S polkit-kde-agent polkit --needed --noconfirm
+systemctl status polkit
 # Fonts
 pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
@@ -16,7 +18,7 @@ pacman -S bluez bluez-utils blueman --noconfirm --needed
 pacman -S network-manager-applet --noconfirm --needed
 
 # Breeze and GTk Themes
-pacman -S qt6ct breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
+pacman -S breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
 pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm --needed
 pacman -S adwaita-icon-theme gnome-themes-extra gtk3 gtk4 --noconfirm --needed
 pacman -S xdg-desktop-portal-gtk xdg-desktop-portal-hyprland xdg-desktop-portal-kde --noconfirm --needed
