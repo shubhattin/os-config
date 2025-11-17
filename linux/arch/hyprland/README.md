@@ -6,6 +6,3 @@
 
 - qBittorent and gwenview dark theme not working
 
-## To Do
-
-- [ ] Test Screen Sharing on Discord(browser and standalone), Zoom, Google Meet, etc
