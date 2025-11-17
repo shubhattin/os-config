@@ -26,6 +26,11 @@ def install():
     sys.exit()
 
 
+"""
+Use `sudo ddcutil detect` to find the display numebr
+"""
+
+
 @app.command()
 def up(
     perc: int,

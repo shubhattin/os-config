@@ -3,7 +3,7 @@
 # Includes Important Packages to be installed for current hyprland setup
 
 # Basic Apps
-pacman -S vi vim bat git paru --noconfirm --needed
+pacman -S vi vim bat git paru ddcutil --noconfirm --needed
 # ^ paru is there in eos packages
 
 ## Hyprland tools
@@ -38,8 +38,27 @@ pacman -S partitionmanager okular haruna ark gwenview konsole kwrite --noconfirm
 pacman -S gnome-calendar font-manager --noconfirm --needed
 
 # Clipboard
-pacman -S copyq wl-clipboard --noconfirm --needed
+pacman -S cliphist wl-clipboard --noconfirm --needed
 
 ## SDDM Theme and Background
 # Use
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/keyitdev/sddm-astronaut-theme/master/setup.sh)"`
+
+# Load the module needed for ddcutil
+modprobe i2c-dev
+
+# Make it load automatically on boot
+echo "i2c-dev" | tee /etc/modules-load.d/i2c-dev.conf
+
+# You may also need i2c drivers for your GPU
+# modprobe i2c-nvidia-gpu  # For NVIDIA
+# OR
+# sudo modprobe i2c-amdgpu      # For AMD
+#
+
+## FCITX Typing
+pacman -S fcitx5 fcitx5-configtool fcitx5-gtk fcitx5-qt fcitx5-m17n --needed --noconfirm
+
+## Screen Recorder
+sudo pacman -S wf-recorder --needed --noconfirm
+# Use `wf-recorder -f recording.mp4` to record full screen and press ctrl+c to save
