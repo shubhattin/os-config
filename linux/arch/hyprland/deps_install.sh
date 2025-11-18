@@ -19,6 +19,7 @@ pacman -S network-manager-applet --noconfirm --needed
 
 # Breeze and GTk Themes
 pacman -S breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
+pacman -S kvantum ttf-hack --noconfirm --needed
 pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm --needed
 pacman -S adwaita-icon-theme gnome-themes-extra gtk3 gtk4 --noconfirm --needed
 pacman -S xdg-desktop-portal-gtk xdg-desktop-portal-hyprland xdg-desktop-portal-kde --noconfirm --needed
@@ -35,6 +36,7 @@ pacman -S noto-fonts noto-fonts-extra --noconfirm --needed
 
 # Other KDE Apps
 pacman -S partitionmanager okular haruna ark gwenview konsole kwrite --noconfirm --needed
+pacman -S kate --noconfirm --needed
 
 # Gnome/Gtk App
 pacman -S gnome-calendar font-manager --noconfirm --needed
