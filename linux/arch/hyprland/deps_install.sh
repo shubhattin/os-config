@@ -10,7 +10,7 @@ pacman -S vi vim bat git paru ddcutil --noconfirm --needed
 pacman -S hyprshot hypridle hyprlock hyprpaper --noconfirm --needed
 pacman -S swaync waybar wofi dolphin archlinux-xdg-menu swayosd --noconfirm --needed
 pacman -S polkit-kde-agent polkit --needed --noconfirm
-systemctl status polkit
+systemctl enable --now polkit
 # Fonts
 pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
