@@ -15,7 +15,9 @@ systemctl enable --now polkit
 pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
 pacman -S bluez bluez-utils blueman --noconfirm --needed
-pacman -S network-manager-applet --noconfirm --needed
+pacman -S plasma-nm networkmanager --noconfirm --needed
+systemctl enable --now NetworkManager
+# to run use kcmshell6 kcm_networkmanagement
 
 # Breeze and GTk Themes
 pacman -S breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
