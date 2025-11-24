@@ -14,9 +14,11 @@ systemctl enable --now polkit
 # Fonts
 pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
-pacman -S bluez bluez-utils blueman --noconfirm --needed
-pacman -S plasma-nm networkmanager --noconfirm --needed
+pacman -S bluez bluez-utils --noconfirm --needed
+pacman -S plasma-nm plasma-pa networkmanager --noconfirm --needed
 systemctl enable --now NetworkManager
+pacman -S --needed bluedevil bluez-obex
+systemctl enable --now bluetooth.service
 # to run use kcmshell6 kcm_networkmanagement
 
 # Breeze and GTk Themes
