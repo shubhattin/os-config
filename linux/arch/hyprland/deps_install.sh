@@ -17,7 +17,9 @@ pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 pacman -S bluez bluez-utils --noconfirm --needed
 pacman -S plasma-nm plasma-pa networkmanager --noconfirm --needed
 systemctl enable --now NetworkManager
-pacman -S --needed bluedevil bluez-obex
+# use `sudo nmtui` to manage network conenctions in the terminal
+# use `paru -S bluetuith` to install cli bluetooth manager
+pacman -S bluedevil bluez-obex --noconfirm --noconfirm
 systemctl enable --now bluetooth.service
 # to run use kcmshell6 kcm_networkmanagement
 
