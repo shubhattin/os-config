@@ -11,6 +11,7 @@ pacman -S hyprshot hypridle hyprlock hyprpaper --noconfirm --needed
 pacman -S swaync waybar wofi dolphin archlinux-xdg-menu swayosd --noconfirm --needed
 pacman -S polkit-kde-agent polkit --needed --noconfirm
 systemctl enable --now polkit
+update-desktop-database
 # Fonts
 pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
