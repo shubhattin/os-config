@@ -46,7 +46,7 @@ pacman -S partitionmanager okular haruna ark gwenview konsole kwrite --noconfirm
 pacman -S kate --noconfirm --needed
 
 # Gnome/Gtk App
-pacman -S gnome-calendar font-manager --noconfirm --needed
+pacman -S gnome-calendar font-manager nautilus --noconfirm --needed
 
 # Clipboard
 pacman -S cliphist wl-clipboard --noconfirm --needed
