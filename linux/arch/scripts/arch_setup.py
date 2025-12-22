@@ -266,7 +266,7 @@ def get_script(opt: InstallerOptions):
         add_pkgs(
             [
                 "chaotic-aur/brave-bin chaotic-aur/zen-browser-bin",
-                "chromium",
+                "chaotic-aur/chaotic-aur/helium-browser-bin",
             ]
         )
 
