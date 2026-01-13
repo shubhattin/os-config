@@ -16,13 +16,15 @@ update-desktop-database
 pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
 # Bluetooth and Wifi
 pacman -S bluez bluez-utils --noconfirm --needed
-pacman -S plasma-nm plasma-pa networkmanager --noconfirm --needed
+pacman -S plasma-nm plasma-pa network-manager-applet networkmanager --noconfirm --needed
 systemctl enable --now NetworkManager
 # use `sudo nmtui` to manage network conenctions in the terminal
 # use `paru -S bluetuith` to install cli bluetooth manager
-pacman -S bluedevil bluez-obex --noconfirm --noconfirm
+pacman -S bluedevil bluez-obex --noconfirm --needed
 systemctl enable --now bluetooth.service
 # to run use kcmshell6 kcm_networkmanagement
+# kwaalet
+pacman -S kwallet5 kwalletmanager kwallet-pam --noconfirm --neeeded
 
 # Breeze and GTk Themes
 pacman -S breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
