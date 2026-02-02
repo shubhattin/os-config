@@ -25,6 +25,8 @@ systemctl enable --now bluetooth.service
 # to run use kcmshell6 kcm_networkmanagement
 # kwaalet
 pacman -S kwallet5 kwalletmanager kwallet-pam --noconfirm --neeeded
+# gnome-keyring
+pacman -S gnome-keyring libsecret --needed --noconfirm
 
 # Breeze and GTk Themes
 pacman -S breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
