@@ -23,8 +23,8 @@ systemctl enable --now NetworkManager
 pacman -S bluedevil bluez-obex --noconfirm --needed
 systemctl enable --now bluetooth.service
 # to run use kcmshell6 kcm_networkmanagement
-# kwaalet
-pacman -S kwallet5 kwalletmanager kwallet-pam --noconfirm --neeeded
+# kwaalet (for now remoevd) and using gnome-keyring
+# pacman -S kwallet5 kwalletmanager kwallet-pam --noconfirm --neeeded
 # gnome-keyring
 pacman -S gnome-keyring libsecret --needed --noconfirm
 
