@@ -278,7 +278,7 @@ def get_script(opt: InstallerOptions):
             ]
         )
         # Image and Video Editing
-        add_pkgs("gimp kdenlive ffmpeg")
+        add_pkgs("gimp kdenlive ffmpeg kamoso chaotic-aur/audio-recorder")
         # Virtualization
         add_pkgs(
             "qemu-full virt-manager virt-viewer dnsmasq bridge-utils libguestfs ebtables vde2 openbsd-netcat"

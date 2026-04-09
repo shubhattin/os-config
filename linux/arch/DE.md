@@ -227,6 +227,8 @@ GreeterEnvironment=QT_SCREEN_SCALE_FACTORS=1.25
   - `sudo systemctl enable libvirtd.service` or `sudo systemctl start libvirtd.service`
   - Add current user to libvirt group `sudo usermod -aG libvirt $USER`
   - Start the network either `virsh net-start default` or `virsh net-autostart default`
+- Audio Recorder : `pacman -S chaotic-aur/audio-recorder`
+- Camera : `pacman -S kamoso`
 
 ### VS Code Keybindings Fix
 
