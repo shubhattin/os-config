@@ -218,6 +218,7 @@ def get_script(opt: InstallerOptions):
         add_pkgs(
             "python-numpy python-scipy python-pandas python-openpyxl python-matplotlib python-pyyaml python-toml python-typer python-pyquery python-jinja python-watchdog"
         )
+        add_pkgs("chaotic-aur/python-ffmpeg-python")
 
         # Lua, tmux and neovim
         add_comment("tmux, lua and neovim")
@@ -244,6 +245,7 @@ def get_script(opt: InstallerOptions):
         commands.append(
             "echo 'You have to setup password for postgres user using `sudo -u postgres psql`'"
         )
+        add_pkgs("chaotic-aur/scc tokei")
 
         # Java
         add_comment("Java")
