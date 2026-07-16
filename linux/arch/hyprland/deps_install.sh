@@ -1,69 +1,78 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Includes Important Packages to be installed for current hyprland setup
+# Packages for the Hyprland + Noctalia desktop.
+# Run as a normal user with sudo access: paru must not be run as root.
 
-# Basic Apps
-pacman -S vi vim bat git paru ddcutil --noconfirm --needed
-# ^ paru is there in eos packages
+# Basic tools
+sudo pacman -S --needed --noconfirm vi vim bat git ddcutil
 
-## Hyprland tools
-pacman -S hyprshot hypridle hyprlock hyprpaper --noconfirm --needed
-pacman -S swaync waybar wofi dolphin archlinux-xdg-menu swayosd --noconfirm --needed
-pacman -S polkit-kde-agent polkit --needed --noconfirm
-systemctl enable --now polkit
+# paru is available from the EndeavourOS repository on this system.
+if ! command -v paru >/dev/null 2>&1; then
+  sudo pacman -S --needed --noconfirm paru
+fi
+
+# Shell, notifications, wallpaper, idle/lock screen, launcher, clipboard, OSD,
+# network and Bluetooth UI are all provided by Noctalia.
+paru -S --needed --noconfirm noctalia-git
+
+# Hyprland utilities that remain in use.
+sudo pacman -S --needed --noconfirm hyprshot dolphin archlinux-xdg-menu
+
+# Keep this KDE polkit agent: it supplies authentication dialogs for Dolphin,
+# KDE Partition Manager, and other privileged KDE application actions.
+sudo pacman -S --needed --noconfirm polkit polkit-kde-agent
+sudo systemctl enable --now polkit
 update-desktop-database
+
 # Fonts
-pacman -S ttf-font-awesome ttf-meslo-nerd --noconfirm --needed
-# Bluetooth and Wifi
-pacman -S bluez bluez-utils --noconfirm --needed
-pacman -S plasma-nm plasma-pa network-manager-applet networkmanager --noconfirm --needed
-systemctl enable --now NetworkManager
-# use `sudo nmtui` to manage network conenctions in the terminal
-# use `paru -S bluetuith` to install cli bluetooth manager
-pacman -S bluedevil bluez-obex --noconfirm --needed
-systemctl enable --now bluetooth.service
-# to run use kcmshell6 kcm_networkmanagement
-# kwaalet (for now remoevd) and using gnome-keyring
-# pacman -S kwallet5 kwalletmanager kwallet-pam --noconfirm --neeeded
-# gnome-keyring
-pacman -S gnome-keyring libsecret --needed --noconfirm
+sudo pacman -S --needed --noconfirm ttf-font-awesome ttf-meslo-nerd
+
+# Noctalia manages NetworkManager and BlueZ directly; do not install Plasma-NM,
+# Bluedevil, the NetworkManager tray applet, or Plasma's audio applet.
+sudo pacman -S --needed --noconfirm networkmanager bluez bluez-utils
+sudo systemctl enable --now NetworkManager bluetooth.service
+
+# Keep GNOME Keyring for secrets. Do not remove KWallet: current KDE apps
+# (including KIO and Okular) depend on it.
+sudo pacman -S --needed --noconfirm gnome-keyring libsecret
 
 # Breeze and GTk Themes
-pacman -S breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons --noconfirm --needed
-pacman -S kvantum ttf-hack --noconfirm --needed
-pacman -S qt6ct breeze breeze-gtk kde-cli-tools qt5ct breeze-icons --noconfirm --needed
-pacman -S adwaita-icon-theme gnome-themes-extra gtk3 gtk4 --noconfirm --needed
-pacman -S xdg-desktop-portal-gtk xdg-desktop-portal-hyprland xdg-desktop-portal-kde --noconfirm --needed
+sudo pacman -S --needed --noconfirm breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons
+sudo pacman -S --needed --noconfirm kvantum ttf-hack
+sudo pacman -S --needed --noconfirm qt6ct qt5ct adwaita-icon-theme gnome-themes-extra gtk3 gtk4
+# Keep the KDE portal for KDE apps' file dialogs and integration.
+sudo pacman -S --needed --noconfirm xdg-desktop-portal-gtk xdg-desktop-portal-hyprland xdg-desktop-portal-kde
 
 # Fonts
-pacman -S \
+sudo pacman -S --needed --noconfirm \
   ttf-cascadia-code-nerd \
   ttf-fira-code \
   ttf-firacode-nerd \
   ttf-hack-nerd \
   ttf-inconsolata-nerd \
-  ttf-inconsolata-lgc-nerd --noconfirm --needed
-pacman -S noto-fonts noto-fonts-extra --noconfirm --needed
+  ttf-inconsolata-lgc-nerd
+sudo pacman -S --needed --noconfirm noto-fonts noto-fonts-extra
 
 # Other KDE Apps
-pacman -S partitionmanager okular haruna ark gwenview konsole kwrite --noconfirm --needed
-pacman -S kate --noconfirm --needed
+sudo pacman -S --needed --noconfirm partitionmanager okular haruna ark gwenview konsole kwrite kate
 
 # Gnome/Gtk App
-pacman -S gnome-calendar font-manager nautilus --noconfirm --needed
+sudo pacman -S --needed --noconfirm gnome-calendar font-manager nautilus
 
-# Clipboard
-pacman -S cliphist wl-clipboard --noconfirm --needed
+# wl-clipboard remains necessary for hyprshot and general Wayland clipboard
+# interoperability. Noctalia replaces cliphist as the clipboard history UI.
+sudo pacman -S --needed --noconfirm wl-clipboard
 
 ## SDDM Theme and Background
 # Use
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/keyitdev/sddm-astronaut-theme/master/setup.sh)"`
 
 # Load the module needed for ddcutil
-modprobe i2c-dev
+sudo modprobe i2c-dev
 
 # Make it load automatically on boot
-echo "i2c-dev" | tee /etc/modules-load.d/i2c-dev.conf
+echo "i2c-dev" | sudo tee /etc/modules-load.d/i2c-dev.conf >/dev/null
 
 # You may also need i2c drivers for your GPU
 # modprobe i2c-nvidia-gpu  # For NVIDIA
@@ -72,8 +81,8 @@ echo "i2c-dev" | tee /etc/modules-load.d/i2c-dev.conf
 #
 
 ## FCITX Typing
-pacman -S fcitx5 fcitx5-configtool fcitx5-gtk fcitx5-qt fcitx5-m17n --needed --noconfirm
+sudo pacman -S --needed --noconfirm fcitx5 fcitx5-configtool fcitx5-gtk fcitx5-qt fcitx5-m17n
 
 ## Screen Recorder
-sudo pacman -S wf-recorder --needed --noconfirm
+sudo pacman -S --needed --noconfirm wf-recorder
 # Use `wf-recorder -f recording.mp4` to record full screen and press ctrl+c to save
