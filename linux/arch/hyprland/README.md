@@ -26,6 +26,8 @@ the underlying services, and lets Noctalia manage their UI.
   integration.
 - `kwallet` remains installed because KIO, Okular, and other installed KDE
   components require it. GNOME Keyring remains the general secret service.
+- `breeze`, `breeze-gtk`, and `breeze-icons` remain installed for Qt/GTK theming
+  via qt6ct / Kvantum. They are independent of Plasma-NM and Bluedevil.
 
 ## Remove the retired desktop components
 
@@ -38,7 +40,8 @@ sudo pacman -Rns waybar wofi swaync swayosd hyprpaper hypridle hyprlock \
 ```
 
 Do **not** add `kwallet`, `polkit-kde-agent`, `xdg-desktop-portal-kde`,
-`networkmanager`, `bluez`, `bluez-utils`, or `wl-clipboard` to that command.
+`breeze`, `breeze-gtk`, `breeze-icons`, `networkmanager`, `bluez`,
+`bluez-utils`, or `wl-clipboard` to that command.
 `networkmanager-qt` may already disappear as an unused dependency when
 `plasma-nm` is removed; naming it explicitly is safe as long as pacman accepts
 the transaction.
