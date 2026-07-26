@@ -142,8 +142,11 @@ def get_script(opt: InstallerOptions):
             )
         commands.append("grub-mkconfig -o /boot/grub/grub.cfg")
 
-        # DPI scaling
-        add_comment("DPI Scaling for sddm using X11")
+        # DPI scaling + SDDM greeter deps
+        # qt6-virtualkeyboard is required when InputMethod=qtvirtualkeyboard is set
+        # (astronaut theme / virtualkbd.conf); missing it can black-screen the greeter.
+        add_comment("SDDM greeter deps and DPI scaling")
+        add_pkgs("qt6-virtualkeyboard")
         if opt.frac_scale > 1 and not os.path.isfile("/etc/sddm.conf.d/hidpi.conf"):
             commands.extend(
                 [
@@ -162,22 +165,23 @@ def get_script(opt: InstallerOptions):
             add_pkgs("amd-ucode")
 
         # GPU Driver Setup
-        add_comment("# GPU Driver Setup")
-        add_pkgs("glmark2")
+        # See ../nvidia.md — do not install plain `nvidia` (chaotic-aur may pull 580xx).
+        add_comment("GPU Driver Setup")
+        add_pkgs("glmark2 mesa-utils")
 
         def intel_graphic_setup():
             add_comment("Intel Graphic Setup")
             add_pkgs("mesa intel-media-driver libva-mesa-driver")
 
         def nvidia_graphic_setup():
-            add_comment("Nvidia Graphic Setup")
+            add_comment("Nvidia Graphic Setup (nvidia-open + matching utils)")
             add_pkgs(
-                "nvidia nvidia-lts nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime"
+                "nvidia-open-dkms nvidia-utils nvidia-settings nvidia-prime opencl-nvidia"
             )
             commands.extend(
                 [
-                    """sudo bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm-nomodeset.conf'""",
-                    "sudo mkinitcpio -P",
+                    """bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm.conf'""",
+                    "mkinitcpio -P",
                 ]
             )
 

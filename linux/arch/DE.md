@@ -42,23 +42,18 @@
 - [x] Fractional Scaling works both in x11 as well as wayland sessions
 - [ ] Not able to set fractional scaling to 100% while external monitor is connected and restore it to 125%. It works but not with proper scaling support as expected.
 - **GPU Setup**
-  - list GPUs `lspci -vnn | grep VGA`
+  - Full NVIDIA / hybrid Optimus guide: **[nvidia.md](./nvidia.md)** (package choice, modeset, PRIME, SDDM black-screen fixes).
+  - list GPUs `lspci -vnn | grep -E 'VGA|3D'`
   - **Intel GPU**
     - `sudo pacman -S intel-ucode mesa intel-media-driver libva-mesa-driver`
-  - Follow Instruction [here](https://dev.to/vitorvargas/how-to-install-the-nvidia-driver-on-archlinux-5bgc)
-    - `sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings opencl-nvidia xorg-server-devel nvidia-prime nvidia-lts`
-    - DRM Kernel Mode Setting, refer [NVIDIA](https://wiki.archlinux.org/title/NVIDIA)
-      - `sudo bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm-nomodeset.conf'`
-      - `sudo mkinitcpio -P`
-      - Check if working by `sudo cat /sys/module/nvidia_drm/parameters/modeset`, it should output `Y` instead of `N`
-    - Check if `nouveau` or the proprietary nvidia drivers are running
-      - `lsmod | grep nouveau`
-      - `lsmod | grep nvidia`
-      - `lspci -k | grep -A 3 -i "VGA"` to view installed drivers in use
-      - `prime-run glxinfo | grep 'OpenGL renderer'` checking opengl renderer
-  - Check nvidia kernel module version `modinfo -F version nvidia`
+  - **NVIDIA (current Arch)** — do **not** use `pacman -S nvidia` (can pull chaotic-aur `nvidia-580xx-*` and mismatch settings). For RTX / Turing+:
+    - `sudo pacman -S nvidia-open-dkms nvidia-utils nvidia-settings nvidia-prime qt6-virtualkeyboard`
+    - DRM KMS: `sudo bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm.conf'` then `sudo mkinitcpio -P` and reboot
+    - Check: `cat /sys/module/nvidia_drm/parameters/modeset` → `Y`; `nvidia-smi`; `modinfo -F version nvidia` must match `nvidia-utils`
+    - Offload: `prime-run glxinfo | grep 'OpenGL renderer'`
+    - `qt6-virtualkeyboard` is needed for SDDM when `InputMethod=qtvirtualkeyboard` is set (astronaut / virtualkbd.conf); without it the greeter can stay blank.
   - [ ] Try to run tensorflow with nvidia gpu in both dual gpu and single gpu devices
-  - **Optimus Manager for X11**
+  - **Optimus Manager for X11** (optional; prefer Hybrid + `prime-run` — see [nvidia.md](./nvidia.md))
     - `paru -S optimus-manager-git optimus-manager-qt`
     - `sudo systemctl enable optimus-manager` after restart
     - Set AutoStart by launching Optimus manager qt and settings autostart.
@@ -106,6 +101,8 @@ GRUB_SAVEDEFAULT=true
 ```
 
 #### Fixing SDDM scaling
+
+If the greeter is blank after installing NVIDIA drivers, see **[nvidia.md — SDDM / greeter](./nvidia.md#sddm--greeter-common-breakage-after-nvidia-install)** (`qt6-virtualkeyboard`, driver mismatch, hybrid Xorg errors).
 
 Currently X11 is used for display, so it does not handles scaaling correcly we could set it [wayland](https://wiki.archlinux.org/title/SDDM#Wayland) by changinf `/etc/sddm.conf.d/10-wayland.conf`
 

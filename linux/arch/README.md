@@ -1,7 +1,8 @@
-## Config/Setup Guide for Fedora
+## Config/Setup Guide for Arch / EndeavourOS
 
 - **[Command Line Tools](./CLI.md)**
 - **[Desktop Environment](./DE.md)**
+- **[NVIDIA / Hybrid GPU](./nvidia.md)**
 
 ### _[Custom Arch Setup Script](./scripts/arch_setup.py)_
 
