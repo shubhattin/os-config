@@ -2,44 +2,83 @@
 
 # Simple Tool to run C/C++ Programs
 import os
+import platform
+import shutil
+import subprocess
 import sys
-from typing import Any, List
+from typing import List
 
-try:
-    import shubhlipi
-except ModuleNotFoundError:
-    os.system("pip install shubhlipi")
-    print("\nRequired Dependencies Installed")
-    sys.exit()
-
-import shubhlipi as sh
-
-if len(sh.argv) == 0:
-    print("Usage: runcpp <filename>")
-    sys.exit()
+IS_WINDOWS = platform.system() == "Windows"
+IS_LINUX = platform.system() == "Linux"
+ARGV = sys.argv[1:]
 
 
-def delete_file(fl: str):
+def home() -> str:
+    return os.path.expanduser("~")
+
+
+def read_file(loc: str) -> str:
+    with open(loc, encoding="utf-8") as f:
+        return f.read()
+
+
+def write_file(loc: str, val: str) -> None:
+    parent = os.path.dirname(loc)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    with open(loc, encoding="utf-8", mode="w") as f:
+        f.write(val)
+
+
+def copy_file(frm: str, to: str) -> None:
+    parent = os.path.dirname(to)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    shutil.copy2(frm, to)
+
+
+def delete_file(fl: str) -> None:
     if os.path.exists(fl):
         os.remove(fl)
 
 
-if sh.argv[0] == "--install":
-    if sh.IS_WINDOWS:
+def cmd(comm: str, capture: bool = False):
+    """Run a shell command. capture=True → [returncode, output]; else live exit code."""
+    if capture:
+        p = subprocess.run(
+            comm,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+        return [p.returncode, p.stdout or ""]
+    return subprocess.call(comm, shell=True)
+
+
+def parent_dir(loc: str) -> str:
+    return os.path.dirname(os.path.abspath(loc)) or "."
+
+
+if len(ARGV) == 0:
+    print("Usage: runcpp <filename>")
+    sys.exit()
+
+if ARGV[0] == "--install":
+    src = os.path.realpath(__file__)
+    if IS_WINDOWS:
         py_path = os.path.dirname(sys.executable) + r"\Scripts"
-        sh.write(f"{py_path}\\runcpp.py", sh.read("runcpp.py"))
+        copy_file(src, f"{py_path}\\runcpp.py")
         print("Installed as 'runcpp'")
-        # Also ensure that 'PY' is added in the PATH_TEXT Environment Variable
         sys.exit()
-    elif sh.IS_LINUX:
-        pth = os.path.realpath(__file__)
-        INST_PATH = sh.home() + "/.local/bin/runcpp"
-        sh.copy_file(pth, INST_PATH)
-        sh.cmd(f"chmod +x {INST_PATH}")
+    elif IS_LINUX:
+        inst_path = home() + "/.local/bin/runcpp"
+        copy_file(src, inst_path)
+        cmd(f"chmod +x {inst_path}")
         print("Installed as 'runcpp'")
         sys.exit()
 
-NM = sh.argv[0]
+NM = ARGV[0]
 
 if os.path.isfile(f"{NM}.cpp"):
     NM = f"{NM}.cpp"
@@ -55,29 +94,22 @@ if not os.path.isfile(f"{NM}"):
 
 compiler_name = {"cpp": "g++", "c": "gcc"}[NM.split(".")[-1]]
 
-pth = NM.split("/")
-parent_path = sh.parent(NM)
-
+pth = NM.replace("\\", "/").split("/")
 ONLY_NAME = ".".join(pth[-1].split(".")[:-1])
-OUTPUT_EXT = "exe" if sh.IS_WINDOWS else "o"
-compile_data: List[Any] = sh.cmd(
-    f"{compiler_name} {NM} -o {ONLY_NAME}.{OUTPUT_EXT}", display=False
+OUTPUT_EXT = "exe" if IS_WINDOWS else "o"
+compile_data: List = cmd(
+    f"{compiler_name} {NM} -o {ONLY_NAME}.{OUTPUT_EXT}", capture=True
 )
 
 if compile_data[0] != 0:
-    # Error
     print(compile_data[1])
 elif compile_data[0] == 0:
-    # Success
     try:
-        CMD = ""
-        # if len(pth) > 1:
-        # CMD += f"cd {parent_path} && "
-        if sh.IS_LINUX:
-            sh.cmd(f"{CMD}./{ONLY_NAME}.{OUTPUT_EXT}", direct=False)
-        elif sh.IS_WINDOWS:
-            sh.cmd(f"{CMD}.\\{ONLY_NAME}.{OUTPUT_EXT}", direct=False)
-    except:
+        if IS_LINUX:
+            cmd(f"./{ONLY_NAME}.{OUTPUT_EXT}")
+        elif IS_WINDOWS:
+            cmd(f".\\{ONLY_NAME}.{OUTPUT_EXT}")
+    except Exception:
         pass
     finally:
         delete_file(f"{ONLY_NAME}.{OUTPUT_EXT}")

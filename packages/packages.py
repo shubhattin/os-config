@@ -1,18 +1,25 @@
+#!/usr/bin/env python3
+
 import os
+import subprocess
 import sys
 
-try:
-    import shubhlipi as sh
-except Exception:
-    cm = [
-        r"{0}\python -m pip install --upgrade pip".format(
-            os.path.dirname(sys.executable)
-        ),
-        "pip install shubhlipi",
-    ]
-    for x in cm:
-        os.system(x)
-    exit()
+ARGV = sys.argv[1:]
+
+
+def cmd(comm: str, capture: bool = False):
+    """Run a shell command. capture=True → [returncode, output]; else live exit code."""
+    if capture:
+        p = subprocess.run(
+            comm,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+        return [p.returncode, p.stdout or ""]
+    return subprocess.call(comm, shell=True)
+
 
 pkg = {
     "lekhika": ["keyboard", "mouse", "winregistry", "pillow", "pystray"],
@@ -46,7 +53,7 @@ pkg = {
     ],
     "exe": ["https://github.com/pyinstaller/pyinstaller/tarball/develop"],
 }
-cmd = {
+extra_cmd = {
     "sarve": [
         "pywin32_postinstall.py -instal",  # To setup pywin32
         "npm install -g terser",  # JS minifier installation
@@ -56,10 +63,10 @@ cmd = {
     ]
 }
 if __name__ == "__main__":
-    for x in sh.argv:
+    for x in ARGV:
         if x in pkg:
             for c in pkg[x]:
-                sh.cmd(f"pip install {c}", False)
-        if x in cmd:
-            for c in cmd[x]:
-                sh.cmd(c, False)
+                cmd(f"pip install {c}")
+        if x in extra_cmd:
+            for c in extra_cmd[x]:
+                cmd(c)
