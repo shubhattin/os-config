@@ -165,7 +165,7 @@ def get_script(opt: InstallerOptions):
             add_pkgs("amd-ucode")
 
         # GPU Driver Setup
-        # See ../nvidia.md — do not install plain `nvidia` (chaotic-aur may pull 580xx).
+        # See ../nvidia.md — only nvidia-open / nvidia-open-lts (never plain `nvidia` or *-dkms).
         add_comment("GPU Driver Setup")
         add_pkgs("glmark2 mesa-utils")
 
@@ -174,13 +174,43 @@ def get_script(opt: InstallerOptions):
             add_pkgs("mesa intel-media-driver libva-mesa-driver")
 
         def nvidia_graphic_setup():
-            add_comment("Nvidia Graphic Setup (nvidia-open + matching utils)")
+            add_comment("Nvidia Graphic Setup (prebuilt nvidia-open for linux + linux-lts)")
             add_pkgs(
-                "nvidia-open-dkms nvidia-utils nvidia-settings nvidia-prime opencl-nvidia"
+                "nvidia-open nvidia-open-lts nvidia-utils nvidia-settings nvidia-prime opencl-nvidia"
             )
             commands.extend(
                 [
                     """bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm.conf'""",
+                    # Early-load so SDDM/X does not race NVIDIA hotplug on hybrid laptops
+                    """grep -q 'nvidia_drm' /etc/mkinitcpio.conf || sed -i 's/^MODULES=()/MODULES=(nvidia nvidia_modeset nvidia_drm)/' /etc/mkinitcpio.conf""",
+                    """bash -c 'printf \"%s\\n\" nvidia nvidia_modeset nvidia_drm > /etc/modules-load.d/nvidia.conf'""",
+                    "mkdir -p /etc/systemd/system/sddm.service.d",
+                    """bash -c 'printf \"%s\\n\" \"[Unit]\" \"After=systemd-modules-load.service\" \"Wants=systemd-modules-load.service\" > /etc/systemd/system/sddm.service.d/10-after-modules.conf'""",
+                    # Intel-only X screen on hybrid (BusID 00:02.0). Avoids Fatal pixmap on NVIDIA G0.
+                    "mkdir -p /etc/X11/xorg.conf.d",
+                    """cat > /etc/X11/xorg.conf.d/20-intel-only.conf << 'EOF'
+# DO NOT REMOVE — required on Intel+NVIDIA Optimus (see nvidia.md)
+Section "ServerLayout"
+    Identifier "Layout0"
+    Screen 0 "IntelScreen"
+EndSection
+
+Section "Device"
+    Identifier "IntelGraphics"
+    Driver "modesetting"
+    BusID "PCI:0:2:0"
+EndSection
+
+Section "Screen"
+    Identifier "IntelScreen"
+    Device "IntelGraphics"
+EndSection
+
+Section "ServerFlags"
+    Option "AutoAddGPU" "false"
+EndSection
+EOF""",
+                    "systemctl daemon-reload",
                     "mkinitcpio -P",
                 ]
             )

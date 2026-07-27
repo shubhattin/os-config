@@ -1,160 +1,163 @@
 # NVIDIA Drivers (Arch / EndeavourOS)
 
-Notes for hybrid Intel + NVIDIA laptops (e.g. Ideapad with Alder Lake iGPU + RTX 3050) and single-NVIDIA machines. Prefer the [ArchWiki NVIDIA](https://wiki.archlinux.org/title/NVIDIA) and [NVIDIA Optimus](https://wiki.archlinux.org/title/NVIDIA_Optimus) pages when something changes.
+For Turing+ GPUs (RTX 20xx and newer), including hybrid Intel + NVIDIA laptops.
+Prefer [ArchWiki: NVIDIA](https://wiki.archlinux.org/title/NVIDIA) / [NVIDIA Optimus](https://wiki.archlinux.org/title/NVIDIA_Optimus) if package names change.
 
-## Pick the right packages
+## Packages (use only these)
 
-On current Arch/EndeavourOS:
+| Role | Package |
+|------|---------|
+| Kernel module (`linux`) | `nvidia-open` |
+| Kernel module (`linux-lts`) | `nvidia-open-lts` |
+| Userspace | `nvidia-utils` |
+| Settings UI | `nvidia-settings` |
+| PRIME offload helper | `nvidia-prime` |
+| SDDM astronaut / virtual keyboard | `qt6-virtualkeyboard` |
+| Optional | `opencl-nvidia` `cuda` `cudnn` |
 
-| Goal | Packages |
-|------|----------|
-| **Recommended (Turing+ / RTX 20xx and newer)** | `nvidia-open` **or** `nvidia-open-dkms` + `nvidia-utils` + `nvidia-settings` + `nvidia-prime` |
-| DKMS (any kernel / custom kernels) | `nvidia-open-dkms` + matching `linux-headers` / `linux-lts-headers` |
-| Prebuilt for `linux` / `linux-lts` only | `nvidia-open` / `nvidia-open-lts` (no DKMS rebuild needed) |
-| Optional CUDA | `cuda` `cudnn` `opencl-nvidia` |
+Do **not** install:
 
-**Do not** blindly run `pacman -S nvidia`.
+- `nvidia` / `nvidia-lts` / `nvidia-dkms` — obsolete; with chaotic-aur, `nvidia` can pull a **legacy** branch
+- `nvidia-*-dkms` — not needed with stock `linux` + `linux-lts`
+- Any `nvidia-580xx-*` / other legacy xx branches
+- Mixing versions across module / utils / settings
 
-- The closed-source `nvidia` package is effectively gone from official repos in favor of **`nvidia-open`**.
-- On systems with **chaotic-aur**, `nvidia` can resolve to **`nvidia-580xx-dkms`** (legacy branch). That is the wrong stack for modern RTX cards and easily mismatches `nvidia-settings` / `libxnvctrl` from the 610.x series.
+## Install (do all steps — hybrid needs the Xorg file)
 
-Keep **kernel module + utils + settings** on the **same major version** (e.g. all 610.x). Mixing `nvidia-580xx-utils` with `nvidia-settings 610.x` is broken.
-
-### Legacy only (usually avoid)
-
-chaotic-aur / AUR legacy branches (`nvidia-580xx-*`, `470xx`, etc.) are for older GPUs that current `nvidia-open` no longer supports. RTX 3050 should use **`nvidia-open*`**, not 580xx.
-
-## Install (hybrid Optimus laptop)
-
-```bash
-# headers for the kernels you boot
-sudo pacman -S linux-headers linux-lts-headers   # if you use both
-
-# open driver + userspace + PRIME offload helper
-sudo pacman -S nvidia-open-dkms nvidia-utils nvidia-settings nvidia-prime
-
-# SDDM greeter — required if InputMethod=qtvirtualkeyboard is set
-# (e.g. astronaut theme / /etc/sddm.conf.d/virtualkbd.conf). Missing this can blank the login screen.
-sudo pacman -S qt6-virtualkeyboard
-
-# optional
-sudo pacman -S opencl-nvidia cuda cudnn
-```
-
-Enable DRM KMS (needed for Wayland / modern X):
+> **Do not remove** these after install: `20-intel-only.conf`, `nvidia-drm.conf` modeset, mkinitcpio `MODULES=(nvidia…)`, `qt6-virtualkeyboard` (if astronaut/virtualkbd). Removing any of them can bring back a black SDDM.
 
 ```bash
+# 1) packages
+sudo pacman -S nvidia-open nvidia-open-lts nvidia-utils nvidia-settings nvidia-prime qt6-virtualkeyboard
+# optional: sudo pacman -S opencl-nvidia cuda cudnn
+# Intel side (hybrid): sudo pacman -S intel-ucode mesa intel-media-driver libva-mesa-driver
+
+# 2) DRM KMS
 sudo bash -c 'echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia-drm.conf'
+
+# 3) Early-load NVIDIA in initramfs (avoids SDDM/X racing a late NVIDIA hotplug)
+# If MODULES=() is empty:
+sudo sed -i 's/^MODULES=()/MODULES=(nvidia nvidia_modeset nvidia_drm)/' /etc/mkinitcpio.conf
+# If MODULES already has other entries, add: nvidia nvidia_modeset nvidia_drm into that list.
+
+# 3b) Also load at systemd modules-load (belt and suspenders)
+sudo tee /etc/modules-load.d/nvidia.conf >/dev/null <<'EOF'
+nvidia
+nvidia_modeset
+nvidia_drm
+EOF
+
+# 3c) Start SDDM only after modules-load
+sudo mkdir -p /etc/systemd/system/sddm.service.d
+sudo tee /etc/systemd/system/sddm.service.d/10-after-modules.conf >/dev/null <<'EOF'
+[Unit]
+After=systemd-modules-load.service
+Wants=systemd-modules-load.service
+EOF
+sudo systemctl daemon-reload
+
+# 4) REQUIRED on hybrid Optimus laptops — Intel-only X (see next section)
+#    BusID from: lspci -nn | grep -E 'VGA|3D'   (e.g. 00:02.0 → PCI:0:2:0)
+sudo tee /etc/X11/xorg.conf.d/20-intel-only.conf >/dev/null <<'EOF'
+# DO NOT REMOVE — required on Intel+NVIDIA Optimus (see nvidia.md)
+Section "ServerLayout"
+    Identifier "Layout0"
+    Screen 0 "IntelScreen"
+EndSection
+
+Section "Device"
+    Identifier "IntelGraphics"
+    Driver "modesetting"
+    BusID "PCI:0:2:0"
+EndSection
+
+Section "Screen"
+    Identifier "IntelScreen"
+    Device "IntelGraphics"
+EndSection
+
+Section "ServerFlags"
+    Option "AutoAddGPU" "false"
+EndSection
+EOF
+
+# 5) rebuild initramfs and reboot
 sudo mkinitcpio -P
 sudo reboot
 ```
 
-> The filename does not matter; older notes used `nvidia-drm-nomodeset.conf` even though the option is `modeset=1`. Prefer a clear name like `nvidia-drm.conf`.
+If you only boot one kernel, install just that module package (`nvidia-open` **or** `nvidia-open-lts`), not both.
 
-After reboot:
+Desktop-only NVIDIA (no Intel iGPU) can skip step 4. **This Ideapad / all Optimus hybrids must not skip it.**
+
+### Regression check
+
+After changes or driver updates:
 
 ```bash
-# should print Y
-cat /sys/module/nvidia_drm/parameters/modeset
-
-nvidia-smi
-lsmod | grep nvidia
-lsmod | grep nouveau          # should be empty
-lspci -k | grep -A 3 -i VGA
-modinfo -F version nvidia     # must match nvidia-utils version series
+~/.config/os-config/linux/arch/scripts/nvidia_hybrid_check.sh
 ```
 
-## Hybrid / PRIME usage
+All checks should print `OK`. Fix any `FAIL` before reboot.
 
-On muxless Optimus laptops the **internal display is driven by Intel**. NVIDIA is for render offload (and sometimes external HDMI on the NVIDIA chip).
+## Why the Intel-only Xorg file is required (hybrid)
 
-- Default apps → Intel (power saving).
-- Heavy apps → offload to NVIDIA:
+On Optimus, Intel drives the panel; NVIDIA often has no internal connector. If X modesets NVIDIA as a second GPU:
+
+`modeset(G0): Failed to create pixmap` → `Fatal server error: failed to create screen resources` → SDDM black / greeter hang.
+
+Intel-only X keeps displays on Intel. NVIDIA stays available for **PRIME offload** via `/dev/dri/renderD*`.
+
+Confirm BusID matches your machine (`lspci` → `PCI:<bus>:<dev>:<func>` with decimal numbers).
+
+## After reboot — verify
 
 ```bash
+cat /sys/module/nvidia_drm/parameters/modeset   # Y
+lsinitcpio /boot/initramfs-linux.img | grep nvidia
+nvidia-smi                                    # same series as nvidia-utils
+pacman -Q | grep -E 'nvidia|libxnvctrl'       # no 580xx / dkms
+test -f /etc/X11/xorg.conf.d/20-intel-only.conf && echo 'intel-only xorg: ok'
+lsmod | grep nouveau                          # empty
 prime-run glxinfo | grep 'OpenGL renderer'
-prime-run glmark2
-# or manually:
-__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glmark2
 ```
 
-There is a local helper at [`scripts/prime-run`](./scripts/prime-run).
-
-Prefer **PRIME offload** over constantly switching GPU modes. Tools like `optimus-manager` / `envycontrol` can break the display manager if a mode switch leaves X/Wayland without a working output — use carefully, and keep Hybrid + `prime-run` as the default.
-
-### Optimus Manager (X11, optional)
+## Hybrid / PRIME
 
 ```bash
-paru -S optimus-manager-git optimus-manager-qt
-sudo systemctl enable optimus-manager
-# reboot, then set Hybrid in the Qt app and enable autostart
+prime-run <app>
+# or: __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia <app>
 ```
 
-If the greeter fails after a mode switch, drop to a TTY and switch back to Hybrid, or remove the tool and stick with PRIME.
+Helper: [`scripts/prime-run`](./scripts/prime-run). Prefer PRIME over `optimus-manager` / `envycontrol`.
 
-## Intel side (hybrid)
+## SDDM (astronaut theme)
 
-```bash
-sudo pacman -S intel-ucode mesa intel-media-driver libva-mesa-driver
-```
+Checklist if login looks “dead” but you can open a TTY:
 
-List GPUs: `lspci -vnn | grep -E 'VGA|3D'`
-
-## SDDM / greeter (common breakage after NVIDIA install)
-
-SDDM may look “dead” while `systemctl status sddm` is still active. Typical pattern: **Xorg on VT2**, greeter crashed, you are debugging on **tty3**.
+1. `qt6-virtualkeyboard` installed when `InputMethod=qtvirtualkeyboard` is set (`/etc/sddm.conf.d/virtualkbd.conf`).
+2. `/etc/X11/xorg.conf.d/20-intel-only.conf` present on hybrid (step 4 above).
+3. NVIDIA early in initramfs (`MODULES=…` + `mkinitcpio -P`).
+4. You are on the **greeter VT**, not the debug TTY — try **Ctrl+Alt+F1** or **F2**.
 
 ```bash
 systemctl status sddm
 journalctl -u sddm -b --no-pager
-# greeter / Qt errors often under the sddm user session
-journalctl -b --no-pager | grep -i 'sddm-greeter\|xcb\|virtualkeyboard'
+# healthy: Message received from greeter: Connect
+# broken X: Failed to create pixmap / failed to create screen resources in /var/log/Xorg.0.log
 ```
 
-Switch to the graphical VT: `Ctrl+Alt+F2` (or `chvt 2`).
-
-### Checklist when the login screen is blank
-
-1. **`qt6-virtualkeyboard`** — install it (see Install section). Required when `/etc/sddm.conf.d/` sets `InputMethod=qtvirtualkeyboard`.
-2. **Theme** — temporarily force a simple theme (e.g. `breeze`) instead of heavy QML themes like astronaut.
-3. **Driver version mismatch** — remove chaotic `nvidia-580xx-*` if you meant to install current open drivers (see cleanup below).
-4. **Xorg hybrid error** — look for `(EE) modeset(G0): Failed to create pixmap` in `/var/log/Xorg.0.log`. Usually means NVIDIA was initialized incorrectly with modesetting; fix the driver stack + keep `nvidia-drm modeset=1`, then reboot.
-5. **Missing cursor** — `Could not setup default cursor` often rides along with a broken greeter/GL setup; fix greeter deps and drivers first.
-
-### Cleanup wrong 580xx / mismatched install
+## Benchmark
 
 ```bash
-sudo pacman -Rns nvidia-580xx-dkms nvidia-580xx-utils
-# if settings/libxnvctrl are 610.x orphans or mismatched, reinstall with the open stack:
-sudo pacman -S nvidia-open-dkms nvidia-utils nvidia-settings nvidia-prime qt6-virtualkeyboard
-sudo mkinitcpio -P
-sudo reboot
+sudo pacman -S mesa-utils glmark2
+glmark2
+prime-run glmark2
 ```
-
-Confirm versions match:
-
-```bash
-pacman -Q | grep -E 'nvidia|libxnvctrl'
-```
-
-## Verify / benchmark
-
-```bash
-sudo pacman -S mesa-utils glmark2 mission-center   # or: paru -S resources
-glmark2                 # primary (usually Intel on hybrid)
-glmark2-wayland
-prime-run glmark2       # NVIDIA offload — watch Mission Center
-```
-
-## Wayland notes (Hyprland / Plasma)
-
-- `nvidia-drm modeset=1` is required.
-- Prefer current `nvidia-open` + `nvidia-utils`; keep `egl-wayland` (pulled by utils).
-- External monitors on some Optimus laptops only work when the panel is wired to a given GPU — check hardware if a port stays black.
 
 ## References
 
 - [ArchWiki: NVIDIA](https://wiki.archlinux.org/title/NVIDIA)
 - [ArchWiki: NVIDIA Optimus](https://wiki.archlinux.org/title/NVIDIA_Optimus)
 - [ArchWiki: SDDM](https://wiki.archlinux.org/title/SDDM)
-- Local overview still in [DE.md](./DE.md) (points here for install details)
+- [DE.md](./DE.md)

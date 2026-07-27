@@ -65,8 +65,12 @@ sudo pacman -S --needed --noconfirm gnome-calendar font-manager nautilus
 sudo pacman -S --needed --noconfirm wl-clipboard
 
 ## SDDM Theme and Background
-# Use
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/keyitdev/sddm-astronaut-theme/master/setup.sh)"`
+# After astronaut theme setup, ALWAYS install the virtual keyboard dep:
+sudo pacman -S --needed --noconfirm qt6-virtualkeyboard
+# Hybrid NVIDIA machines: also keep /etc/X11/xorg.conf.d/20-intel-only.conf
+# and run: ../scripts/nvidia_hybrid_check.sh
+# Theme installer (optional):
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/keyitdev/sddm-astronaut-theme/master/setup.sh)"
 
 # Load the module needed for ddcutil
 sudo modprobe i2c-dev
