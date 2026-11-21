@@ -659,7 +659,12 @@ def f_personal(ctx): ctx.extract("02-personal.tar.zst", ctx.home)
 
 def f_stow(ctx):
     d = ctx.home / ".dotfiles"
-    ctx.run(["stow", "--no", "-v", "-R", "."], cwd=d)     # dry run first: shows conflicts in the log
+    # Pre-create dirs that hold live app state, so stow links only the tracked files inside
+    # them instead of folding the whole dir into ~/.dotfiles (credentials/sessions in the repo).
+    for sub in (".claude",):
+        if not ctx.dry:
+            (ctx.home / sub).mkdir(exist_ok=True)
+    ctx.run(["stow", "--no", "-v", "-R", "."], cwd=d)    # dry run first: shows conflicts in the log
     ctx.run(["stow", "-v", "-R", "."], cwd=d)             # --restow makes re-runs idempotent
 
 
