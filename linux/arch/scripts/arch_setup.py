@@ -98,6 +98,7 @@ def get_script(opt: InstallerOptions):
             [
                 "base-devel gdb cmake readline unzip zip man-pages p7zip wget curl git htop btop inxi fastfetch util-linux tree bat lf fzf",
                 "chaotic-aur/paru",
+                "chaotic-aur/reflector-simple rate-mirrors",  # mirror GUI (as on EndeavourOS) + fast CLI ranker
                 "pacman-contrib mkinitcpio",
                 "brightnessctl",
             ]
