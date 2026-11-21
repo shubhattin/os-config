@@ -8,6 +8,8 @@
 
 Fresh install order: `archinstall` → `scripts/arch_setup.py` → `hyprland/deps_install.sh` → [APPS.md](./APPS.md) → `stow .` in `~/.dotfiles`.
 
+**Autopilot:** [`restore/restore.py`](./restore/) runs all of the above *and* restores the home backup, with progress, logs and resume. See [restore/README.md](./restore/README.md). A copy ships on the backup pen drive.
+
 ### _[Custom Arch Setup Script](./scripts/arch_setup.py)_
 
 ```bash

@@ -376,7 +376,7 @@ def main(
     log_out_file = os.path.join(LOG_PATH, "log", f"{CURRENT_TIME_ISO}.log")
     if not frac_scale:
         frac_scale = Prompt.ask("Enter Fractional Scaling factor", default=1)
-    if not setup_google_dns:
+    if setup_google_dns is None:
         setup_google_dns = Confirm.ask("Setup Google DNS", default=True)
     if not cpu_type:
         cpu_type = ask_choices("Enter CPU type", ["intel", "amd"])

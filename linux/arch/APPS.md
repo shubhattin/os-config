@@ -3,6 +3,9 @@
 Everything installed on the EndeavourOS machine (Nov 2026) that the other guides don't
 already install. Copy the blocks you want after the base setup.
 
+> Automated: [`restore/restore.py`](./restore/restore.py) runs §1–§13 as steps `a-01…a-13`.
+> **Keep both in sync** when adding/removing apps.
+
 **Install order on a fresh Arch:**
 
 1. `archinstall`: Minimal profile, GRUB, pipewire, NetworkManager, multilib enabled
