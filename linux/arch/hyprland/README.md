@@ -22,10 +22,49 @@ the underlying services, and lets Noctalia manage their UI.
 - `polkit-kde-agent` remains installed and started by Hyprland. It provides the
   password prompts used by Dolphin, KDE Partition Manager, and other privileged
   KDE operations.
-- `xdg-desktop-portal-kde` remains installed for KDE file-dialog and desktop
-  integration.
+- `xdg-desktop-portal-kde` provides the **system file picker** (Dolphin-style
+  dialog) for every portal-using app (Electron apps like T3 Code/VS Code,
+  Chromium browsers, Zen/Firefox). See [File picker](#file-picker--portals).
 - `kwallet` remains installed because KIO, Okular, and other installed KDE
-  components require it. GNOME Keyring remains the general secret service.
+  components require it, but it is **disabled**. GNOME Keyring is the only
+  secret store. See [Secrets](#secrets--keyring).
+
+## File picker / portals
+
+Config: `~/.dotfiles/.config/xdg-desktop-portal/hyprland-portals.conf`
+
+| Interface | Backend |
+|---|---|
+| default | `hyprland;gtk` |
+| ScreenCast, RemoteDesktop | hyprland |
+| Settings | gtk |
+| **FileChooser** | **kde** (the GTK picker overflowed the screen and was unusable) |
+| Secret | gnome-keyring |
+
+- `~/.config/hypr/start-portals.sh` (exec at startup) starts hyprland, gtk and
+  **kde** backends, then the `xdg-desktop-portal` frontend. Hyprland doesn't
+  activate `graphical-session.target`, so they are not auto-started.
+- `hyprland.lua` rule `portal-file-picker` floats + centers the dialog (1100×720).
+- Zen/Firefox only use the portal picker when
+  `widget.use-xdg-desktop-portal.file-picker = 1` (set in the profile's `user.js`).
+- Noctalia has no file-picker portal.
+- Test: `gdbus call --session --dest org.freedesktop.portal.Desktop --object-path /org/freedesktop/portal/desktop --method org.freedesktop.portal.FileChooser.OpenFile "" "test" "{}"`
+
+## Secrets / keyring
+
+- **GNOME Keyring only.** It owns `org.freedesktop.secrets` and serves the portal
+  Secret backend. Its Login collection holds browser/Electron "Safe Storage" keys
+  (Brave, Chrome, Chromium, Helium, Claude, T3 Code, VS Code), `gh` tokens,
+  Wi-Fi PSKs, Noctalia and Zen keys.
+- Unlocked at login by `pam_gnome_keyring` in `/etc/pam.d/sddm` (shipped by
+  sddm). **The login password must equal the keyring password**; change both
+  together (or use `seahorse` → Login → Change password).
+- KWallet: `kwalletrc` → `[Wallet] Enabled=false` (set by `deps_install.sh`);
+  `kwallet-pam` is not installed.
+- Don't launch Chromium browsers with `--password-store=basic`; that bypasses
+  the keyring (passwords only protected by a hard-coded key).
+- Reinstall: restore `~/.local/share/keyrings/` from backup **before** first login
+  to the desktop, with the same user password.
 - `breeze`, `breeze-gtk`, and `breeze-icons` remain installed for Qt/GTK theming
   via qt6ct / Kvantum. They are independent of Plasma-NM and Bluedevil.
 

@@ -33,16 +33,25 @@ sudo pacman -S --needed --noconfirm ttf-font-awesome ttf-meslo-nerd
 sudo pacman -S --needed --noconfirm networkmanager bluez bluez-utils
 sudo systemctl enable --now NetworkManager bluetooth.service
 
-# Keep GNOME Keyring for secrets. Do not remove KWallet: current KDE apps
-# (including KIO and Okular) depend on it.
-sudo pacman -S --needed --noconfirm gnome-keyring libsecret
+# GNOME Keyring is the ONLY secret store (org.freedesktop.secrets + the portal
+# Secret backend). It holds browser/Electron "Safe Storage" keys, gh tokens,
+# Wi-Fi PSKs, Noctalia, etc. SDDM's PAM (pam_gnome_keyring) unlocks it at login,
+# so keep the login password identical to the keyring password.
+# KWallet stays installed (kio, okular, kaccounts depend on it) but is DISABLED so
+# KDE apps never create/prompt for a second wallet. Do not install kwallet-pam.
+sudo pacman -S --needed --noconfirm gnome-keyring libsecret seahorse
+kwriteconfig6 --file kwalletrc --group Wallet --key Enabled false
 
 # Breeze and GTk Themes
 sudo pacman -S --needed --noconfirm breeze breeze-gtk kde-cli-tools chaotic-aur/qt6ct-kde breeze-icons
 sudo pacman -S --needed --noconfirm kvantum ttf-hack
 sudo pacman -S --needed --noconfirm qt6ct qt5ct adwaita-icon-theme gnome-themes-extra gtk3 gtk4
-# Keep the KDE portal for KDE apps' file dialogs and integration.
-sudo pacman -S --needed --noconfirm xdg-desktop-portal-gtk xdg-desktop-portal-hyprland xdg-desktop-portal-kde
+# Portals: hyprland (screencast), gtk (settings/fallback), kde (FILE PICKER).
+# Routing lives in ~/.dotfiles/.config/xdg-desktop-portal/hyprland-portals.conf
+# (FileChooser=kde, Secret=gnome-keyring); ~/.config/hypr/start-portals.sh starts
+# all backends; hyprland.lua floats the picker (rule "portal-file-picker").
+# Noctalia has no file-picker portal of its own.
+sudo pacman -S --needed --noconfirm xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-hyprland xdg-desktop-portal-kde
 
 # Fonts
 sudo pacman -S --needed --noconfirm \
