@@ -51,7 +51,7 @@ def get_script(opt: InstallerOptions):
     def add_pkgs(pkgs: list[str] | str):
         if isinstance(pkgs, str):
             pkgs = [pkgs]
-        commands.append(f"pacman --noconfirm -S {' '.join(pkgs)}")
+        commands.append(f"pacman --noconfirm --needed -S {' '.join(pkgs)}")
 
     def add_comment(comment: str):
         commands.append(f"# {comment}")
@@ -65,7 +65,7 @@ def get_script(opt: InstallerOptions):
                 """bash -c 'echo "nameserver 2001:4860:4860::8888" >> /etc/resolv.conf'""",
                 """bash -c 'echo "nameserver 2001:4860:4860::8844" >> /etc/resolv.conf'""",
                 """bash -c 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf'""",
-                """bash -c 'echo "nameserver 8.8.8.4" >> /etc/resolv.conf'""",
+                """bash -c 'echo "nameserver 8.8.4.4" >> /etc/resolv.conf'""",
                 """chattr +i /etc/resolv.conf""",
             ]
             commands.extend(commads)
@@ -101,12 +101,13 @@ def get_script(opt: InstallerOptions):
                 "chaotic-aur/reflector-simple rate-mirrors",  # mirror GUI (as on EndeavourOS) + fast CLI ranker
                 "pacman-contrib mkinitcpio",
                 "brightnessctl",
+                "bluez bluez-utils",  # needed before `systemctl enable bluetooth` on a minimal archinstall base
             ]
         )
 
         # Basic CLI Setup
         add_comment("Basic CLI Setup")
-        add_pkgs("zsh powerline-fonts fzf zoxide stow chaotic-aur/oh-my-posh")
+        add_pkgs("zsh powerline-fonts fzf zoxide stow chaotic-aur/oh-my-posh-bin")
         commands.extend(
             [
                 "chsh -s $(which zsh)",
@@ -235,11 +236,11 @@ EOF""",
 
         # Nodejs using nvm
         add_comment("Nodejs using nvm")
-        add_pkgs("chaotic-aur/nvm")
+        add_pkgs("nvm")  # official extra repo
         commands.extend(
             [
                 "source /usr/share/nvm/init-nvm.sh",
-                "nvm install 20",
+                "nvm install --lts",
                 "echo 'To use node,npm, add in .zshrc `source /usr/share/nvm/init-nvm.sh`'",
             ]
         )
@@ -303,7 +304,7 @@ EOF""",
         add_pkgs(
             [
                 "chaotic-aur/brave-bin chaotic-aur/zen-browser-bin",
-                "chaotic-aur/chaotic-aur/helium-browser-bin",
+                "chaotic-aur/helium-browser-bin",
             ]
         )
 
@@ -311,7 +312,7 @@ EOF""",
         add_pkgs(
             [
                 "vlc handbrake chaotic-aur/shutter-encoder-bin",
-                "chaotic-aur/simplescreenrecorder",  # works only in X11
+                "chaotic-aur/simplescreenrecorder-git",  # works only in X11
             ]
         )
         # Image and Video Editing

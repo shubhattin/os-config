@@ -3,6 +3,10 @@
 - **[Command Line Tools](./CLI.md)**
 - **[Desktop Environment](./DE.md)**
 - **[NVIDIA / Hybrid GPU](./nvidia.md)**
+- **[Hyprland + Noctalia desktop](./hyprland/README.md)** (current desktop; installer: `hyprland/deps_install.sh`)
+- **[Extra Apps & Tools](./APPS.md)**: everything else installed on the machine, with install commands and order
+
+Fresh install order: `archinstall` → `scripts/arch_setup.py` → `hyprland/deps_install.sh` → [APPS.md](./APPS.md) → `stow .` in `~/.dotfiles`.
 
 ### _[Custom Arch Setup Script](./scripts/arch_setup.py)_
 

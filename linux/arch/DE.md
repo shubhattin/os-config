@@ -1,5 +1,13 @@
 **_This file is written with respect to Endeavour OS(Arch) in KDE Plasma Desktop_**
 
+> **Status (Nov 2026):** the desktop is now **Hyprland + Noctalia on plain Arch** (installed with `archinstall`).
+> - Desktop setup, portals, keyring: **[hyprland/README.md](./hyprland/README.md)**
+> - Current app list and install commands: **[APPS.md](./APPS.md)**
+> - KDE-Plasma-only items below no longer apply: Spectacle (→ `hyprshot`), KDE clipboard / Diodon (→ Noctalia clipboard),
+>   Plasma settings panels, `kwallet-pam` (KWallet is disabled; GNOME Keyring is the only secret store), Discover/flatpak
+>   (no flatpaks in use), Timeshift. Mission Center / Resources aren't installed anymore.
+> - GPU, kernel, GRUB, SDDM and NVIDIA sections are still accurate.
+
 ## OS Installation and Boot
 
 - EOS Installtion Guide
@@ -16,12 +24,20 @@
   - _zram & swap_
     - `cat /proc/swaps` to view current used swap devices including zram
     - `zramctl` to view zram info
-  - My current layout
-    - `/boot` as `ext4` 0.7Gib
-    - `/boot/efi` as `EFI/fat32` 0.7Gib
-    - `/` as `btrfs` 70Gib (more space to accomodate timeshift backup as well)
-    - `/home` remaining space for this Home Directory
-    - `swap` 6Gib
+  - My current layout (Arch via archinstall, whole 512 GB NVMe, GPT, in disk order)
+    - `/boot`: **EFI System, FAT32, 2 GiB**, flags `boot, esp`. One partition for ESP + kernels;
+      the old separate ext4 `/boot` (1.1 GiB) hit 81% with linux + linux-lts + NVIDIA initramfs.
+      archinstall detects the boot partition by its `boot` flag, which on GPT *is* the ESP,
+      so a separate `/boot` + `/boot/efi` setup confuses it.
+    - `/`: `ext4`, **100 GiB** (EOS used ~49 GB: /usr 27G, /opt 5G, docker images 10G)
+    - `[SWAP]`: **16 GiB** (= RAM, so hibernate is possible) plus archinstall's zram.
+      Placed right after `/`, so root can later grow into it if needed (then use a swapfile).
+    - `/home`: `ext4`, **rest (~359 GiB), last on the disk**. For a future Windows dual boot,
+      shrink `/home` from its end (offline, live USB), install Windows into the gap
+      (it reuses the 2 GiB ESP), and enable `os-prober`. To undo, delete the Windows partitions
+      and grow `/home` to the right; no data has to move.
+  - Previous EOS layout: `/boot` ext4 1.1G, `/boot/efi` 1.2G, `/` ext4 63.5G, swap 6.7G, `/home` 238G,
+    plus an old Windows-era 167G partition at the start (C_Drive).
 - It would be recommended to free space prior to opening the setup and defrag disk if needed OR in live setup using something like KDE Partition Manager.
 - Use this [Linux FileSystem for Windows by Paragon](https://www.paragon-software.com/home/linuxfs-windows/) to access linux filesystem on windows.
   - [ ] find if we can use this even when our `/home` or `/` are encrypted.

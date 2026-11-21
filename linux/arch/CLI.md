@@ -32,8 +32,8 @@ sudo pacman -S zsh powerline-fonts fzf zoxide ghostty
 # restart to make changes take effect
 chsh -s $(which zsh)
 
-# install oh-my-posh using paru, this should chaotic aur by default
-paru -S oh-my-posh
+# install oh-my-posh (prebuilt binary from chaotic-aur)
+sudo pacman -S chaotic-aur/oh-my-posh-bin
 ```
 
 #### Using zodide instead of cd
@@ -96,7 +96,8 @@ sudo pacman -S tmux
 ### NVM(Node Version Manager)
 
 ```bash
-paru nvm
+sudo pacman -S nvm   # official extra repo
+source /usr/share/nvm/init-nvm.sh   # already in .zshrc via dotfiles
 # Install the nodejs version you prefer
 # like nvm install 20.9
 ```
