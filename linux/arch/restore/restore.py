@@ -45,7 +45,7 @@ from typing import Callable
 CPU = "intel"            # arch_setup.py --cpu-type
 GPU = "both"             # intel + nvidia (hybrid)
 FRAC_SCALE = "1.25"      # X11 SDDM greeter scale (/etc/sddm.conf.d/hidpi.conf)
-GOOGLE_DNS = True        # arch_setup.py writes Google DNS + chattr +i /etc/resolv.conf
+GOOGLE_DNS = True        # arch_setup.py writes IPv4 DNS (1.1.1.1, 8.8.4.4) + chattr +i /etc/resolv.conf
 INSTALL_FLUTTER = True   # `fvm install stable` (~1.5 GB download)
 
 BACKUP_DIR = Path(__file__).resolve().parent

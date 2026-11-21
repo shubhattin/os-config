@@ -59,12 +59,11 @@ def get_script(opt: InstallerOptions):
     def base_system_setup():
         if opt.setup_google_dns:
             commads = [
-                "# Setup Google DNS",
+                # IPv4 only: IPv6 nameservers stall every lookup on networks with broken IPv6
+                "# Setup public DNS (Cloudflare + Google, IPv4)",
                 """chattr -i /etc/resolv.conf""",
                 """rm /etc/resolv.conf""",
-                """bash -c 'echo "nameserver 2001:4860:4860::8888" >> /etc/resolv.conf'""",
-                """bash -c 'echo "nameserver 2001:4860:4860::8844" >> /etc/resolv.conf'""",
-                """bash -c 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf'""",
+                """bash -c 'echo "nameserver 1.1.1.1" >> /etc/resolv.conf'""",
                 """bash -c 'echo "nameserver 8.8.4.4" >> /etc/resolv.conf'""",
                 """chattr +i /etc/resolv.conf""",
             ]

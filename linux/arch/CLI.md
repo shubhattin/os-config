@@ -1,14 +1,28 @@
 ### Configuring DNS
 
 ```bash
-# Using Google DNS to avoid network related issues
+# Using public IPv4 DNS (Cloudflare + Google) to avoid network related issues
 sudo chattr -i /etc/resolv.conf
 sudo rm /etc/resolv.conf
-sudo bash -c 'echo "nameserver 2001:4860:4860::8888" >> /etc/resolv.conf'
-sudo bash -c 'echo "nameserver 2001:4860:4860::8844" >> /etc/resolv.conf'
-sudo bash -c 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf'
+sudo bash -c 'echo "nameserver 1.1.1.1" >> /etc/resolv.conf'
 sudo bash -c 'echo "nameserver 8.8.4.4" >> /etc/resolv.conf'
-sudo chattr +i /etc/resolv.conf
+sudo chattr +i /etc/resolv.conf # immutable, so NetworkManager can't overwrite it
+```
+
+> Don't put IPv6 nameservers (e.g. `2001:4860:4860::8888`) first. On networks whose IPv6 is
+> broken (seen on a Jio hotspot/router), every lookup waits for them to time out (~8 s), and
+> tools with a 10 s timeout (Claude Code: "Connection to api.anthropic.com timed out") fail.
+
+#### If IPv6 is broken on a network
+
+Check: `ping -6 -c2 2001:4860:4860::8888` loses all packets even though `ping -c2 1.1.1.1` works.
+Disable IPv6 for just that Wi-Fi connection:
+
+```bash
+nmcli -t -f NAME,DEVICE connection show --active  # find the connection name
+sudo nmcli connection modify "<name>" ipv6.method disabled
+sudo nmcli connection up "<name>"
+# undo later: sudo nmcli connection modify "<name>" ipv6.method auto && sudo nmcli connection up "<name>"
 ```
 
 ### Download few Basic packages
