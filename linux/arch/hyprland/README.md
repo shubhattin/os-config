@@ -49,6 +49,36 @@ Config: `~/.dotfiles/.config/xdg-desktop-portal/hyprland-portals.conf`
   `widget.use-xdg-desktop-portal.file-picker = 1` (set in the profile's `user.js`).
 - Noctalia has no file-picker portal.
 - Test: `gdbus call --session --dest org.freedesktop.portal.Desktop --object-path /org/freedesktop/portal/desktop --method org.freedesktop.portal.FileChooser.OpenFile "" "test" "{}"`
+  → the dialog's window class must be `org.freedesktop.impl.portal.desktop.kde`
+  (`hyprctl clients | grep portal`).
+- **Light GTK picker shows up instead?** Then `xdg-desktop-portal-kde` isn't
+  installed/running and the GTK backend is answering. Check
+  `pacman -Q xdg-desktop-portal-kde xdg-desktop-portal-hyprland`; if missing,
+  re-run `./deps_install.sh` (it is idempotent). To restart the portals without
+  logging out:
+
+  ```bash
+  pkill -f '^/usr/lib/xdg-desktop-portal'
+  setsid -f ~/.config/hypr/start-portals.sh
+  ```
+
+  Restart the browser/app afterwards if it still shows the old dialog.
+
+## Dark theme
+
+| Toolkit | Where it comes from |
+|---|---|
+| Qt / KDE apps, **KDE file picker** | `~/.config/qt6ct/qt6ct.conf` → `BreezeDark.colors` (Hyprland exports `QT_QPA_PLATFORMTHEME=qt6ct`; `start-portals.sh` passes it to D-Bus activated services) |
+| GTK4 / libadwaita (Nautilus, Calendar) | `gsettings … color-scheme 'prefer-dark'` |
+| GTK3 (GTK portal, Chromium/Helium GTK dialogs) | `gsettings … gtk-theme 'Adwaita-dark'` — GTK3 ignores `color-scheme` |
+
+Both gsettings keys are set by `deps_install.sh` and persist in dconf. On a
+fresh install where that didn't run, GTK3 dialogs come up **light**; fix with:
+
+```bash
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+```
 
 ## Secrets / keyring
 

@@ -30,7 +30,9 @@ sudo pacman -S --needed --noconfirm hyprshot dolphin archlinux-xdg-menu playerct
 # KDE Partition Manager, and other privileged KDE application actions.
 sudo pacman -S --needed --noconfirm polkit polkit-kde-agent
 sudo systemctl enable --now polkit
-update-desktop-database
+# Needs root: it writes /usr/share/applications/mimeinfo.cache. Without sudo it fails and
+# `set -e` aborts the rest of this script (portals, keyring, themes never get installed).
+sudo update-desktop-database
 
 # Fonts
 sudo pacman -S --needed --noconfirm ttf-font-awesome ttf-meslo-nerd
@@ -54,6 +56,11 @@ sudo pacman -S --needed --noconfirm breeze breeze-gtk kde-cli-tools chaotic-aur/
 sudo pacman -S --needed --noconfirm kvantum ttf-hack
 # NOTE: plain `qt6ct` conflicts with `qt6ct-kde` (installed above) — don't add it here.
 sudo pacman -S --needed --noconfirm qt5ct adwaita-icon-theme gnome-themes-extra gtk3 gtk4
+# Dark theme for GTK. GTK4/libadwaita follows color-scheme; GTK3 apps (the GTK portal,
+# Chromium/Helium GTK dialogs, etc.) only follow gtk-theme, so set both. Stored in dconf.
+# Qt/KDE apps (incl. the KDE portal file picker) get BreezeDark from ~/.config/qt6ct.
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 # Portals: hyprland (screencast), gtk (settings/fallback), kde (FILE PICKER).
 # Routing lives in ~/.dotfiles/.config/xdg-desktop-portal/hyprland-portals.conf
 # (FileChooser=kde, Secret=gnome-keyring); ~/.config/hypr/start-portals.sh starts
