@@ -1,6 +1,6 @@
 **_This file is written with respect to Endeavour OS(Arch) in KDE Plasma Desktop_**
 
-> **Status (Nov 2026):** the desktop is now **Hyprland + Noctalia on plain Arch** (installed with `archinstall`).
+> **Status (Nov 2026):** the desktop is now **Hyprland + Noctalia on EndeavourOS** (EOS installer, Hyprland edition).
 > - Desktop setup, portals, keyring: **[hyprland/README.md](./hyprland/README.md)**
 > - Current app list and install commands: **[APPS.md](./APPS.md)**
 > - KDE-Plasma-only items below no longer apply: Spectacle (→ `hyprshot`), KDE clipboard / Diodon (→ Noctalia clipboard),
@@ -122,25 +122,14 @@ GRUB_SAVEDEFAULT=true
 
 #### SDDM greeter (current setup)
 
-Greeter runs on **Wayland via KWin**, pinned to the Intel iGPU (working since 2026-11-21). Set up by
-[`hyprland/deps_install.sh`](./hyprland/deps_install.sh).
+Greeter runs on **X11** (not Wayland). Keep it that way for now on this hybrid NVIDIA laptop.
 
-- **Why the earlier attempt failed:** on this laptop NVIDIA enumerates as `card0` and Intel as `card1`,
-  but both screens (eDP-1, DP-1) are wired to Intel. A compositor that grabs the first DRM device lands
-  on NVIDIA, where nothing is connected.
-- **Fix:** udev rule `/etc/udev/rules.d/61-intel-igpu.rules` gives the Intel GPU a stable name
-  `/dev/dri/intel-igpu` (PCI `0000:00:02.0`), and the greeter runs
-  `env KWIN_DRM_DEVICES=/dev/dri/intel-igpu kwin_wayland --drm --no-lockscreen --no-global-shortcuts --locale1`.
-- Drop-in: `/etc/sddm.conf.d/zz-wayland-greeter.conf` (`DisplayServer=wayland`,
-  `GreeterEnvironment=QT_WAYLAND_SHELL_INTEGRATION=layer-shell,QT_SCREEN_SCALE_FACTORS=1.25`).
-  `zz-` sorts after `hidpi.conf`, so its `GreeterEnvironment` wins.
-- Needs `kwin` (pulled in by `xdg-desktop-portal-kde` anyway), `layer-shell-qt`, `qt6-wayland`.
-- Verify: `journalctl -b _UID=$(id -u sddm) | grep KWIN_DRM_DEVICES` and `ls -l /dev/dri/intel-igpu` (→ Intel card).
-- **Rollback to the X11 greeter** (from a TTY, Ctrl+Alt+F3):
-  `sudo rm /etc/sddm.conf.d/zz-wayland-greeter.conf && sudo systemctl restart sddm`.
-  The X11 path still needs `/etc/X11/xorg.conf.d/20-intel-only.conf` (do not remove).
-- Theme: astronaut + `qt6-virtualkeyboard` (`virtualkbd.conf`); renders fine on Wayland.
+- Scaling: `/etc/sddm.conf.d/hidpi.conf` → `QT_SCREEN_SCALE_FACTORS=1.25`
+- Theme: astronaut + `qt6-virtualkeyboard` if `virtualkbd.conf` is set
+- Hybrid guard: `/etc/X11/xorg.conf.d/20-intel-only.conf` (do not remove)
 - Blank greeter checklist: **[nvidia.md — SDDM](./nvidia.md#sddm-astronaut-theme)**
+
+Wayland greeter (`DisplayServer=wayland` + weston/kwin) was tried and deferred — revisit later. Do not enable it until NVIDIA/hybrid greeter behavior is solid.
 
 ```config
 # /etc/sddm.conf.d/hidpi.conf

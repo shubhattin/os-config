@@ -6,9 +6,9 @@ already install. Copy the blocks you want after the base setup.
 > Automated: [`restore/restore.py`](./restore/restore.py) runs §1–§13 as steps `a-01…a-13`.
 > **Keep both in sync** when adding/removing apps.
 
-**Install order on a fresh Arch:**
+**Install order on a fresh EndeavourOS:**
 
-1. `archinstall`: Minimal profile, GRUB, pipewire, NetworkManager, multilib enabled
+1. EndeavourOS installer: Hyprland edition, GRUB (ships pipewire, NetworkManager, SDDM, paru/yay)
 2. [`scripts/arch_setup.py`](./scripts/arch_setup.py): pacman.conf + chaotic-aur, mirrors, kernels, drivers, CLI basics, common apps
 3. [`hyprland/deps_install.sh`](./hyprland/deps_install.sh): Hyprland, SDDM, Noctalia, portals, keyring, themes
 4. **This file**: everything else
@@ -20,7 +20,7 @@ nothing above exists. `paru` already prefers chaotic-aur when a package is in bo
 
 ---
 
-## 1. System pieces archinstall doesn't add
+## 1. System pieces the base install doesn't add
 
 Laptop audio firmware, power profiles (used by Noctalia), thumbnails for Dolphin, media codecs, fonts.
 

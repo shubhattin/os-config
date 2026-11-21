@@ -7,20 +7,21 @@ set -euo pipefail
 # Basic tools
 sudo pacman -S --needed --noconfirm vi vim bat git ddcutil
 
-# paru comes from chaotic-aur on plain Arch (arch_setup.py enables chaotic-aur first).
+# paru is available from the EndeavourOS repository on this system.
 if ! command -v paru >/dev/null 2>&1; then
-  sudo pacman -S --needed --noconfirm chaotic-aur/paru
+  sudo pacman -S --needed --noconfirm paru
 fi
 
-# Compositor + login manager. archinstall "Minimal" profile installs neither.
-# The SDDM greeter runs on Wayland via KWin (section below); xorg-server stays installed as
-# the X11 fallback greeter and for Xwayland-less tools.
-sudo pacman -S --needed --noconfirm hyprland sddm xorg-server qt6-wayland layer-shell-qt
-sudo systemctl enable sddm
+# Hyprland, SDDM and Xorg come with the EndeavourOS installer (Hyprland edition), so they
+# are not installed here. The SDDM greeter stays on X11 (stable on this hybrid NVIDIA laptop).
 
 # Shell, notifications, wallpaper, idle/lock screen, launcher, clipboard, OSD,
 # network and Bluetooth UI are all provided by Noctalia.
-paru -S --needed --noconfirm --skipreview noctalia-git
+# EndeavourOS's Hyprland edition already ships the repo package `noctalia`, which conflicts with
+# noctalia-git. Only install the -git build when neither is present.
+if ! pacman -Q noctalia >/dev/null 2>&1 && ! pacman -Q noctalia-git >/dev/null 2>&1; then
+  paru -S --needed --noconfirm --skipreview noctalia-git
+fi
 
 # Hyprland utilities that remain in use.
 sudo pacman -S --needed --noconfirm hyprshot dolphin archlinux-xdg-menu playerctl ghostty alacritty  # used by hyprland.lua binds
@@ -79,30 +80,6 @@ sudo pacman -S --needed --noconfirm gnome-calendar font-manager nautilus
 # wl-clipboard remains necessary for hyprshot and general Wayland clipboard
 # interoperability. Noctalia replaces cliphist as the clipboard history UI.
 sudo pacman -S --needed --noconfirm wl-clipboard
-
-## SDDM Wayland greeter (KWin), pinned to the Intel iGPU. Tested 2026-11-21.
-# NVIDIA enumerates as card0 on this hybrid laptop while both screens hang off Intel,
-# so the greeter compositor must be told which GPU to use. A udev symlink gives Intel a
-# stable name (card numbers can swap between boots/installs).
-# Rollback to X11 greeter: sudo rm /etc/sddm.conf.d/zz-wayland-greeter.conf && sudo systemctl restart sddm
-sudo pacman -S --needed --noconfirm kwin layer-shell-qt qt6-wayland
-sudo tee /etc/udev/rules.d/61-intel-igpu.rules >/dev/null <<'EOF'
-# Stable name for the Intel iGPU (PCI 0000:00:02.0); used by the SDDM greeter (KWIN_DRM_DEVICES)
-SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-igpu"
-EOF
-sudo mkdir -p /etc/sddm.conf.d
-sudo tee /etc/sddm.conf.d/zz-wayland-greeter.conf >/dev/null <<'EOF'
-# Wayland greeter via KWin, pinned to the Intel iGPU (see os-config hyprland/deps_install.sh).
-# Rollback (from a TTY):  sudo rm /etc/sddm.conf.d/zz-wayland-greeter.conf && sudo systemctl restart sddm
-# "zz-" so it is read after hidpi.conf / virtualkbd.conf and wins for duplicate keys.
-[General]
-DisplayServer=wayland
-GreeterEnvironment=QT_WAYLAND_SHELL_INTEGRATION=layer-shell,QT_SCREEN_SCALE_FACTORS=1.25
-
-[Wayland]
-CompositorCommand=env KWIN_DRM_DEVICES=/dev/dri/intel-igpu kwin_wayland --drm --no-lockscreen --no-global-shortcuts --locale1
-EOF
-sudo udevadm control --reload && sudo udevadm trigger --subsystem-match=drm --action=change || true
 
 ## SDDM Theme and Background
 # After astronaut theme setup, ALWAYS install the virtual keyboard dep:

@@ -133,9 +133,6 @@ Helper: [`scripts/prime-run`](./scripts/prime-run). Prefer PRIME over `optimus-m
 
 ## SDDM (astronaut theme)
 
-The greeter now runs on **Wayland (KWin) pinned to the Intel iGPU**. See [DE.md — SDDM greeter](./DE.md#sddm-greeter-current-setup).
-If that greeter breaks: `sudo rm /etc/sddm.conf.d/zz-wayland-greeter.conf && sudo systemctl restart sddm` (X11 fallback).
-
 Checklist if login looks “dead” but you can open a TTY:
 
 1. `qt6-virtualkeyboard` installed when `InputMethod=qtvirtualkeyboard` is set (`/etc/sddm.conf.d/virtualkbd.conf`).

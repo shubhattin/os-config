@@ -265,39 +265,7 @@ reflector --verbose --protocol https --sort rate --latest 20 --download-timeout
 reflector --verbose -c IN -c SG --protocol https --sort age --latest 20 --download-timeout 5
 ```
 
-##### GUI: Reflector Simple (same tool EndeavourOS ships)
-
-On plain Arch it comes from **chaotic-aur** (needs [Chaotic AUR](#enable-chaotic-aur) enabled first):
-
-```bash
-sudo pacman -S chaotic-aur/reflector-simple   # GUI wrapper (yad) around reflector
-reflector-simple                              # pick countries/protocol/sort, preview, then save
-```
-
-It writes `/etc/pacman.d/mirrorlist` (asks for the password) and keeps a backup. Run `sudo pacman -Syyu` afterwards.
-(EndeavourOS-only extras like `eos-rankmirrors` / the Welcome app don't exist on Arch and aren't needed: they rank EOS's own repo mirrors.)
-
-##### Alternative: `rate-mirrors` (official repo, fastest)
-
-```bash
-sudo pacman -S rate-mirrors
-rate-mirrors --allow-root --protocol https arch | sudo tee /etc/pacman.d/mirrorlist
-rate-mirrors chaotic-aur | sudo tee /etc/pacman.d/chaotic-mirrorlist   # also ranks chaotic-aur mirrors
-```
-
-##### Automatic weekly refresh (optional)
-
-```bash
-sudo tee /etc/xdg/reflector/reflector.conf >/dev/null <<'EOF'
---save /etc/pacman.d/mirrorlist
---protocol https
---country IN,SG
---latest 20
---sort age
---download-timeout 5
-EOF
-sudo systemctl enable --now reflector.timer
-```
+In Endeavour OS you use the Welcome app to update mirrors.
 
 ### Paru Installation and Usage
 
